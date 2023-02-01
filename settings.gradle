@@ -1,0 +1,22 @@
+pluginManagement {
+    repositories {
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+}
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+    repositories {
+        google()
+        mavenCentral()
+    }
+}
+rootProject.name = "Compose Multimodule Navigation"
+include ':app'
+include ':common:ui'
+include ':common:theme'
+include ':common:domain'
+include ':features:login:ui'
+include ':features:account:ui'
+include ':features:cards:ui'
