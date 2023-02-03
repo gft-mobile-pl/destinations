@@ -10,18 +10,19 @@
         <option name="modules">
           <set>
             <option value="$PROJECT_DIR$" />
-            <option value="$PROJECT_DIR$/app" />
-            <option value="$PROJECT_DIR$/common" />
-            <option value="$PROJECT_DIR$/common/domain" />
-            <option value="$PROJECT_DIR$/common/theme" />
-            <option value="$PROJECT_DIR$/common/ui" />
-            <option value="$PROJECT_DIR$/features" />
-            <option value="$PROJECT_DIR$/features/account" />
-            <option value="$PROJECT_DIR$/features/account/ui" />
-            <option value="$PROJECT_DIR$/features/cards" />
-            <option value="$PROJECT_DIR$/features/cards/ui" />
-            <option value="$PROJECT_DIR$/features/login" />
-            <option value="$PROJECT_DIR$/features/login/ui" />
+            <option value="$PROJECT_DIR$/example" />
+            <option value="$PROJECT_DIR$/example/app" />
+            <option value="$PROJECT_DIR$/example/common" />
+            <option value="$PROJECT_DIR$/example/common/domain" />
+            <option value="$PROJECT_DIR$/example/common/theme" />
+            <option value="$PROJECT_DIR$/example/common/ui" />
+            <option value="$PROJECT_DIR$/example/features" />
+            <option value="$PROJECT_DIR$/example/features/account" />
+            <option value="$PROJECT_DIR$/example/features/account/ui" />
+            <option value="$PROJECT_DIR$/example/features/cards" />
+            <option value="$PROJECT_DIR$/example/features/cards/ui" />
+            <option value="$PROJECT_DIR$/example/features/login" />
+            <option value="$PROJECT_DIR$/example/features/login/ui" />
           </set>
         </option>
       </GradleProjectSettings>

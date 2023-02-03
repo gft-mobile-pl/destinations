@@ -13,10 +13,10 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "Compose Multimodule Navigation"
-include ':app'
-include ':common:ui'
-include ':common:theme'
-include ':common:domain'
-include ':features:login:ui'
-include ':features:account:ui'
-include ':features:cards:ui'
+include ':example:app'
+include ':example:common:ui'
+include ':example:common:theme'
+include ':example:common:domain'
+include ':example:features:login:ui'
+include ':example:features:account:ui'
+include ':example:features:cards:ui'
