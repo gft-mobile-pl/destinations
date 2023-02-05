@@ -1,6 +1,7 @@
 package com.gft.destinations
 
 import com.gft.destinations.Destination.DestinationProxy
+import com.gft.destinations.OnNavigationRequest.NavigationRequestHandler
 
 fun interface OnNavigationRequest {
 
@@ -10,22 +11,26 @@ fun interface OnNavigationRequest {
 
     operator fun <T : Any?> invoke(destination: DestinationProxy<T>, argument: T) {
         val navigationRequest = NavigationRequest(destination, argument)
-        NavigationRequestHandler(navigationRequest).callback(navigationRequest)
+        DefaultNavigationRequestHandler(navigationRequest).callback(navigationRequest)
     }
 
-    class NavigationRequestHandler(
-        private val navigationRequest: NavigationRequest<*>
-    ) {
-        fun <T : Any?> handle(destination: DestinationProxy<T>, handler: (argument: T) -> Unit) {
-            if (navigationRequest.destination == destination) {
-                @Suppress("UNCHECKED_CAST")
-                handler(navigationRequest.argument as T)
-            }
-        }
+    interface NavigationRequestHandler {
+        fun <T : Any?> handle(destination: DestinationProxy<T>, handler: (argument: T) -> Unit)
     }
 
     data class NavigationRequest<T : Any?>(
         val destination: DestinationProxy<T>,
         val argument: T
     )
+}
+
+private class DefaultNavigationRequestHandler(
+    private val navigationRequest: OnNavigationRequest.NavigationRequest<*>
+) : NavigationRequestHandler {
+    override fun <T : Any?> handle(destination: DestinationProxy<T>, handler: (argument: T) -> Unit) {
+        if (navigationRequest.destination == destination) {
+            @Suppress("UNCHECKED_CAST")
+            handler(navigationRequest.argument as T)
+        }
+    }
 }
