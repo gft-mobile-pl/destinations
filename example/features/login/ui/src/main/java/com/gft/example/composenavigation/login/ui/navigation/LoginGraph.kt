@@ -2,10 +2,10 @@ package com.gft.example.composenavigation.login.ui.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.composable
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.navigate
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.navigation
+import com.gft.destinations.Destination
+import com.gft.destinations.composable
+import com.gft.destinations.navigate
+import com.gft.destinations.navigation
 import com.gft.example.composenavigation.login.ui.screens.otp.OtpScreen
 import com.gft.example.composenavigation.login.ui.screens.usercredentials.UserCredentialsScreen
 

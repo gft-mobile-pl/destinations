@@ -1,4 +1,4 @@
-package com.gft.example.composenavigation.common.ui.navigation.typesafe
+package com.gft.destinations
 
 import android.os.Parcelable
 import java.io.Serializable

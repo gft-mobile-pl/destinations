@@ -5,11 +5,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.NavHost
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.composable
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.navigate
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.redirectIgnoreArgument
+import com.gft.destinations.Destination
+import com.gft.destinations.NavHost
+import com.gft.destinations.composable
+import com.gft.destinations.navigate
+import com.gft.destinations.redirectIgnoreArgument
 import com.gft.example.composenavigation.login.ui.navigation.loginGraph
 import com.gft.example.composenavigation.login.ui.screens.otp.OtpScreen
 import com.gft.example.composenavigation.ui.screens.welcomescreen.WelcomeScreen

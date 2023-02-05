@@ -1,4 +1,4 @@
-package com.gft.example.composenavigation.common.ui.navigation.typesafe
+package com.gft.destinations
 
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
@@ -11,7 +11,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.createGraph
 import androidx.navigation.get
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination.DestinationWithoutArgument
+import com.gft.destinations.Destination.DestinationWithoutArgument
 import java.io.Serializable
 
 @Composable

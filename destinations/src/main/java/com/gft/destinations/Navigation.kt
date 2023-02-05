@@ -1,4 +1,4 @@
-package com.gft.example.composenavigation.common.ui.navigation.typesafe
+package com.gft.destinations
 
 import android.os.Bundle
 import android.os.Parcelable
@@ -6,10 +6,10 @@ import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.navOptions
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination.DestinationWithDefaultArgument
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination.DestinationWithOptionalArgument
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination.DestinationWithRequiredArgument
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination.DestinationWithoutArgument
+import com.gft.destinations.Destination.DestinationWithDefaultArgument
+import com.gft.destinations.Destination.DestinationWithOptionalArgument
+import com.gft.destinations.Destination.DestinationWithRequiredArgument
+import com.gft.destinations.Destination.DestinationWithoutArgument
 import java.io.Serializable
 
 fun NavController.navigate(

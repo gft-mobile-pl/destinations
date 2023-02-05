@@ -1,4 +1,4 @@
-package com.gft.example.composenavigation.common.ui.navigation.typesafe
+package com.gft.destinations
 
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
@@ -86,4 +86,3 @@ fun <T : Any> redirectWithArgument(
     argument: T,
     navOptions: NavOptions? = null
 ): () -> Unit = { navController.navigate(destination, argument, navOptions) }
-

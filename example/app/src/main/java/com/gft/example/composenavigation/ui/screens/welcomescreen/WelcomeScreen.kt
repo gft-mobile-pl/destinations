@@ -15,7 +15,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination
+import com.gft.destinations.Destination
 
 val NextAfterWelcomeScreen = Destination.proxy<Unit>()
 

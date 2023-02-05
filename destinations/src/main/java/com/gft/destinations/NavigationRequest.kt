@@ -1,6 +1,6 @@
-package com.gft.example.composenavigation.common.ui.navigation.typesafe
+package com.gft.destinations
 
-import com.gft.example.composenavigation.common.ui.navigation.typesafe.Destination.DestinationProxy
+import com.gft.destinations.Destination.DestinationProxy
 
 fun interface OnNavigationRequest {
 
