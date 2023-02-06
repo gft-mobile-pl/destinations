@@ -104,3 +104,11 @@ private fun <T : Any?> NavController.navigateToDestination(
         navigate(destination.id, null, navOptions)
     }
 }
+
+fun NavController.popBackStack(destination: Destination<*>, inclusive: Boolean) {
+    popBackStack(destination.id, inclusive)
+}
+
+fun NavController.popBackStack(destination: Destination<*>, inclusive: Boolean, saveState: Boolean) {
+    popBackStack(destination.id, inclusive, saveState)
+}
