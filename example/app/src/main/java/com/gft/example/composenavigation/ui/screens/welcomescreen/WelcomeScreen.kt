@@ -11,13 +11,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
-import com.gft.destinations.Destination
-
-val NextAfterWelcomeScreen = Destination.proxy<Unit>()
 
 @Composable
 fun WelcomeScreen(
@@ -49,7 +44,6 @@ fun WelcomeScreen(
 
     }
 }
-
 
 // @Preview(showSystemUi = true)
 // @Composable

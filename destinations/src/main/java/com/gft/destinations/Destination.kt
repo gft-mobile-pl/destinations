@@ -10,7 +10,6 @@ private var lastId = 1000
 sealed class Destination<T : Any?> private constructor() {
     val id: Int = ++lastId
 
-    class DestinationProxy<T> internal constructor()
     class DestinationWithoutArgument internal constructor() : Destination<Nothing>()
     class DestinationWithOptionalArgument<T : Any> internal constructor() : Destination<T?>()
     class DestinationWithRequiredArgument<T : Any> internal constructor() : Destination<T?>()
@@ -49,7 +48,5 @@ sealed class Destination<T : Any?> private constructor() {
         fun withBooleanArgument(defaultArgument: Boolean) = DestinationWithDefaultArgument(defaultArgument)
         fun withBooleanArgument() = DestinationWithRequiredArgument<Boolean>()
         fun withOptionalBooleanArgument() = DestinationWithOptionalArgument<Boolean>()
-
-        fun <T> proxy() = DestinationProxy<T>()
     }
 }
