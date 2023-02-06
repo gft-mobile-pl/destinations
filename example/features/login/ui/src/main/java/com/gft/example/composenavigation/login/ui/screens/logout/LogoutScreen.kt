@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -28,17 +29,16 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 
 @Composable
 fun LogoutDialog(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onLogoutClicked: () -> Unit,
+    onCancelClicked: () -> Unit
 ) {
-    Box(modifier = Modifier.width(280.dp)) {
+    Box(modifier = modifier.width(280.dp)) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .clip(RoundedCornerShape(10.dp))
-                .background(Color(0xff0000ff))
-                .padding(bottom = 3.dp)
-                .clip(RoundedCornerShape(10.dp))
-                .background(Color(0xffffeeff)),
+                .background(MaterialTheme.colorScheme.surface)
         ) {
             Column {
                 Column(
@@ -53,15 +53,12 @@ fun LogoutDialog(
                         color = Color.Black
                     )
                 }
-                Divider(color = Color(0xff0000ff))
+                Divider(color = MaterialTheme.colorScheme.onSurface)
                 Row(modifier = Modifier.height(IntrinsicSize.Min)) {
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable {
-                                // dismiss dialog
-                                //navController.popBackStack()
-                            }
+                            .clickable { onCancelClicked() }
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -72,22 +69,16 @@ fun LogoutDialog(
                             color = Color.Black
                         )
                     }
-                    Box(
+                    Divider(
                         modifier = Modifier
                             .fillMaxHeight()
-                            .width(1.dp)
-                            .background(Color(0xff0000ff)),
+                            .width(1.dp),
+                        color = MaterialTheme.colorScheme.onSurface
                     )
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .clickable {
-                                // go back to home other screen
-                                // navController.popBackStack(
-                                //     route = "home_screen",
-                                //     inclusive = false
-                                // )
-                            }
+                            .clickable { onLogoutClicked() }
                             .padding(horizontal = 16.dp, vertical = 8.dp),
                         contentAlignment = Alignment.Center
                     ) {
@@ -108,6 +99,9 @@ fun LogoutDialog(
 @Composable
 internal fun LogoutDialogPreview() {
     ComposeMultimoduleNavigationTheme() {
-        LogoutDialog()
+        LogoutDialog(
+            onLogoutClicked = {},
+            onCancelClicked = {}
+        )
     }
 }

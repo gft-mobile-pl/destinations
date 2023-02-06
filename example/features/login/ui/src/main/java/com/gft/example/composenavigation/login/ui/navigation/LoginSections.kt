@@ -9,16 +9,17 @@ import com.gft.destinations.navigation
 import com.gft.example.composenavigation.login.ui.screens.otp.OtpScreen
 import com.gft.example.composenavigation.login.ui.screens.usercredentials.UserCredentialsScreen
 
-val LoginGraphDestination = Destination.withoutArgument()
+val LoginSectionDestination = Destination.withoutArgument()
+
 private val CredentialsScreenDestination = Destination.withoutArgument()
 private var OtpScreenDestination = Destination.withoutArgument()
 
-fun NavGraphBuilder.loginGraph(
+fun NavGraphBuilder.loginSection(
     onNavigateToNextAfterSuccessfulLogin: () -> Unit,
     navController: NavHostController
 ) {
     navigation(
-        destination = LoginGraphDestination,
+        destination = LoginSectionDestination,
         startDestination = CredentialsScreenDestination
     ) {
         composable(CredentialsScreenDestination) {

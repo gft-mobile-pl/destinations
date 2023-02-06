@@ -16,7 +16,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 @Composable
 fun AccountSummary(
     modifier: Modifier = Modifier,
-    onNavRequest: () -> Unit
+    onNavigateToAccountDetails: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -29,7 +29,7 @@ fun AccountSummary(
             style = MaterialTheme.typography.headlineLarge
         )
         Button(
-            onClick = { onNavRequest() }
+            onClick = { onNavigateToAccountDetails() }
         ) {
             Text("Show account details")
         }
@@ -40,6 +40,6 @@ fun AccountSummary(
 @Composable
 fun LoginScreenPreview() {
     ComposeMultimoduleNavigationTheme() {
-        AccountSummary(onNavRequest = { })
+        AccountSummary(onNavigateToAccountDetails = { })
     }
 }

@@ -22,21 +22,23 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.gft.destinations.Destination
+import com.gft.destinations.Destination.DestinationWithoutArgument
+import com.gft.destinations.NavHost
+import com.gft.destinations.composable
+import com.gft.destinations.navigate
 import com.gft.example.composenavigation.account.ui.accountsummary.AccountSummary
-import com.gft.example.composenavigation.account.ui.accountsummary.CardsSummary
+import com.gft.example.composenavigation.cards.ui.screens.summary.CardsSummary
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
-private enum class Section(val icon: ImageVector, val label: String, val route: String) {
-    WIDGETS(Icons.Filled.Home, "Home", "widgets"),
-    ACCOUNT(Icons.Filled.Person, "Account", "account"),
-    CARD(Icons.Filled.Warning, "Card", "card")
+private enum class Section(val icon: ImageVector, val label: String, val destination: DestinationWithoutArgument) {
+    WIDGETS(Icons.Filled.Home, "Home", Destination.withoutArgument()),
+    ACCOUNT(Icons.Filled.Person, "Account", Destination.withoutArgument()),
+    CARD(Icons.Filled.Warning, "Card", Destination.withoutArgument())
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -44,8 +46,10 @@ private enum class Section(val icon: ImageVector, val label: String, val route: 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeScreenViewModel = viewModel(),
-    appNavController: NavHostController
+    onNavigateToAccountDetails: () -> Unit,
+    onNavigateToCardDetails: (String) -> Unit,
+    onNavigateToFreezeCard: (String) -> Unit,
+    onNavigationRequest: (Any) -> Unit
 ) {
     val internalNavController: NavHostController = rememberNavController()
     Scaffold(modifier = modifier, bottomBar = {
@@ -63,29 +67,32 @@ fun HomeScreen(
                             Text(text = section.label) // You could use `label` property of NavigationBarItem but the selection marker embraces the icon only (!)
                         }
                     },
-                    selected = currentBackStackEntry.value?.destination?.hierarchy?.any { it.route == section.route } == true,
+                    selected = currentBackStackEntry.value?.destination?.hierarchy?.any { it.id == section.destination.id } == true,
                     onClick = {
-                        internalNavController.navigate(section.route) {
+                        internalNavController.navigate(section.destination) {
                             popUpTo(internalNavController.graph.findStartDestination().id) {
-                                saveState = true
+                                saveState = true // optional (required ONLY IF sections may have inner navigation (better not))
                             }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = true // optional (required ONLY IF sections may have inner navigation (better not))
                         }
                     }
                 )
             }
         }
     }) {
-        NavHost(navController = internalNavController, startDestination = Section.WIDGETS.route) {
-            composable(Section.WIDGETS.route) {
+        NavHost(navController = internalNavController, startDestination = Section.WIDGETS.destination) {
+            composable(Section.WIDGETS.destination) {
                 Text("Widgets go here...")
             }
-            composable(Section.ACCOUNT.route) {
-                AccountSummary(onNavRequest = { })
+            composable(Section.ACCOUNT.destination) {
+                AccountSummary(onNavigateToAccountDetails = onNavigateToAccountDetails)
             }
-            composable(Section.CARD.route) {
-                CardsSummary(onNavRequest = { })
+            composable(Section.CARD.destination) {
+                CardsSummary(
+                    onNavigateToCardDetails = onNavigateToCardDetails,
+                    onNavigateToFreezeCard = onNavigateToFreezeCard
+                )
             }
         }
     }
@@ -95,6 +102,11 @@ fun HomeScreen(
 @Composable
 fun HomeScreenPreview() {
     ComposeMultimoduleNavigationTheme() {
-        HomeScreen(appNavController = rememberNavController())
+        HomeScreen(
+            onNavigateToAccountDetails = {},
+            onNavigateToCardDetails = {},
+            onNavigateToFreezeCard = {},
+            onNavigationRequest = {}
+        )
     }
 }

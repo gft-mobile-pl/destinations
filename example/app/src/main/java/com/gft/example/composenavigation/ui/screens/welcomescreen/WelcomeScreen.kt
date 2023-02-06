@@ -11,14 +11,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
 fun WelcomeScreen(
-    onNavigateToNextWithString: (String) -> Unit,
-    onNavigateToNextNoArgs: () -> Unit,
-    viewModel: WelcomeScreenViewModel = viewModel()
+    onNavigateToNext: () -> Unit,
 ) {
     Column(
         modifier = Modifier
@@ -36,7 +35,7 @@ fun WelcomeScreen(
                 style = MaterialTheme.typography.headlineLarge,
             )
             Button(onClick = {
-                onNavigateToNextNoArgs()
+                onNavigateToNext()
             }) {
                 Text("Continue")
             }
@@ -45,10 +44,10 @@ fun WelcomeScreen(
     }
 }
 
-// @Preview(showSystemUi = true)
-// @Composable
-// internal fun WelcomeScreenPreview() {
-//     ComposeMultimoduleNavigationTheme() {
-//         WelcomeScreen(onNavigateToNext = {})
-//     }
-// }
+@Preview(showSystemUi = true)
+@Composable
+internal fun WelcomeScreenPreview() {
+    ComposeMultimoduleNavigationTheme() {
+        WelcomeScreen(onNavigateToNext = {})
+    }
+}

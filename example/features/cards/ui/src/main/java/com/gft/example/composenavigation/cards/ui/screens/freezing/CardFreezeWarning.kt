@@ -1,7 +1,9 @@
-package com.gft.example.composenavigation.account.ui.accountsummary
+package com.gft.example.composenavigation.cards.ui.screens.freezing
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -14,32 +16,45 @@ import androidx.compose.ui.unit.dp
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
-fun CardsSummary(
+fun CardFreezeWarning(
     modifier: Modifier = Modifier,
-    onNavRequest: () -> Unit
+    onNavigateToConfirmation: () -> Unit
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Cards summary",
+            text = "Card freezing instructions",
             style = MaterialTheme.typography.headlineLarge
         )
-        Button(
-            onClick = { onNavRequest() }
+        Column(
+            modifier = Modifier.fillMaxHeight(),
+            verticalArrangement = Arrangement.SpaceBetween
         ) {
-            Text("Show card #1 details")
+            Text("Some longer description of the card freezing")
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.Center
+            ) {
+                Button(
+                    onClick = { onNavigateToConfirmation() }
+                ) {
+                    Text("Continue")
+                }
+            }
         }
     }
 }
 
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
-fun CardsSummaryPreview() {
+fun CardFreezeWarningPreview() {
     ComposeMultimoduleNavigationTheme() {
-        CardsSummary(onNavRequest = { })
+        CardFreezeWarning(
+            onNavigateToConfirmation = {}
+        )
     }
 }
