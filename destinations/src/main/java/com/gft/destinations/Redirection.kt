@@ -27,7 +27,7 @@ fun <T : Any> redirect(
     navOptions: NavOptions? = null
 ): (T?) -> Unit = { arg: T? -> navController.navigate(destination, arg, navOptions) }
 
-fun <T : Any, U : Any?> redirect(
+fun <T : Any, U> redirect(
     navController: NavController,
     destination: Destination.DestinationWithOptionalArgument<T>,
     navOptions: NavOptions? = null,
@@ -37,7 +37,7 @@ fun <T : Any, U : Any?> redirect(
 fun <T : Any> redirectWithArgument(
     navController: NavController,
     destination: Destination.DestinationWithOptionalArgument<T>,
-    argument: T? = null,
+    argument: T?,
     navOptions: NavOptions? = null
 ): () -> Unit = { navController.navigate(destination, argument, navOptions) }
 
@@ -50,7 +50,7 @@ fun <T : Any> redirect(
     navOptions: NavOptions? = null
 ): (T?) -> Unit = { arg: T? -> navController.navigate(destination, arg, navOptions) }
 
-fun <T : Any, U : Any?> redirect(
+fun <T : Any, U> redirect(
     navController: NavController,
     destination: Destination.DestinationWithDefaultArgument<T>,
     navOptions: NavOptions? = null,
@@ -60,7 +60,7 @@ fun <T : Any, U : Any?> redirect(
 fun <T : Any> redirectWithArgument(
     navController: NavController,
     destination: Destination.DestinationWithDefaultArgument<T>,
-    argument: T? = null,
+    argument: T?,
     navOptions: NavOptions? = null
 ): () -> Unit = { navController.navigate(destination, argument, navOptions) }
 
@@ -73,7 +73,7 @@ fun <T : Any> redirect(
     navOptions: NavOptions? = null
 ): (T) -> Unit = { arg: T -> navController.navigate(destination, arg, navOptions) }
 
-fun <T : Any, U : Any?> redirect(
+fun <T : Any, U> redirect(
     navController: NavController,
     destination: Destination.DestinationWithRequiredArgument<T>,
     navOptions: NavOptions? = null,

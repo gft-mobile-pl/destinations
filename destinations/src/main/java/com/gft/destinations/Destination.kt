@@ -7,12 +7,12 @@ const val DESTINATION_ARGUMENT_KEY = "destinationArgumentKey"
 
 private var lastId = 1000
 
-sealed class Destination<T : Any?> private constructor() {
+sealed class Destination<T> private constructor() {
     val id: Int = ++lastId
 
     class DestinationWithoutArgument internal constructor() : Destination<Nothing>()
     class DestinationWithOptionalArgument<T : Any> internal constructor() : Destination<T?>()
-    class DestinationWithRequiredArgument<T : Any> internal constructor() : Destination<T?>()
+    class DestinationWithRequiredArgument<T : Any> internal constructor() : Destination<T>()
     class DestinationWithDefaultArgument<T : Any> internal constructor(val defaultArgument: T) : Destination<T>()
 
     companion object {
