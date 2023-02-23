@@ -42,29 +42,6 @@ fun <T : Any> redirectWithArgument(
 ): () -> Unit = { navController.navigate(destination, argument, navOptions) }
 
 /**
- * DestinationWithDefaultArgument
- */
-fun <T : Any> redirect(
-    navController: NavController,
-    destination: Destination.DestinationWithDefaultArgument<T>,
-    navOptions: NavOptions? = null
-): (T?) -> Unit = { arg: T? -> navController.navigate(destination, arg, navOptions) }
-
-fun <T : Any, U> redirect(
-    navController: NavController,
-    destination: Destination.DestinationWithDefaultArgument<T>,
-    navOptions: NavOptions? = null,
-    argumentMapper: (U) -> T?
-): (U) -> Unit = { argument -> navController.navigate(destination, argumentMapper(argument), navOptions) }
-
-fun <T : Any> redirectWithArgument(
-    navController: NavController,
-    destination: Destination.DestinationWithDefaultArgument<T>,
-    argument: T?,
-    navOptions: NavOptions? = null
-): () -> Unit = { navController.navigate(destination, argument, navOptions) }
-
-/**
  * DestinationWithRequiredArgument
  */
 fun <T : Any> redirect(

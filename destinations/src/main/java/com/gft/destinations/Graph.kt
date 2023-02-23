@@ -51,8 +51,26 @@ inline fun NavGraphBuilder.composable(
     )
 }
 
-inline fun <reified T : Any?> NavGraphBuilder.composable(
-    destination: Destination<T>,
+inline fun <reified T : Any> NavGraphBuilder.composable(
+    destination: Destination.DestinationWithOptionalArgument<T>,
+    crossinline content: @Composable (T?) -> Unit
+) = composable(destination.id, null, content)
+
+inline fun <reified T : Any> NavGraphBuilder.composable(
+    destination: Destination.DestinationWithOptionalArgument<T>,
+    defaultArgument: T,
+    crossinline content: @Composable (T) -> Unit
+) = composable(destination.id, defaultArgument, content)
+
+inline fun <reified T : Any> NavGraphBuilder.composable(
+    destination: Destination.DestinationWithRequiredArgument<T>,
+    crossinline content: @Composable (T) -> Unit
+) = composable(destination.id, null, content)
+
+@PublishedApi
+internal inline fun <reified T : Any?> NavGraphBuilder.composable(
+    destinationId: Int,
+    defaultArgument: T?,
     crossinline content: @Composable (T) -> Unit
 ) {
     addDestination(
@@ -77,14 +95,14 @@ inline fun <reified T : Any?> NavGraphBuilder.composable(
                 content(argument as T)
             }
             .apply {
-                id = destination.id
+                id = destinationId
                 addArgument(
                     argumentName = DESTINATION_ARGUMENT_KEY,
                     argument = NavArgumentBuilder()
                         .apply {
                             nullable = null !is T
-                            if (destination is Destination.DestinationWithDefaultArgument) {
-                                defaultValue = destination.defaultArgument
+                            if (defaultArgument != null) {
+                                defaultValue = defaultArgument
                             }
                             type = when {
                                 T::class == Int::class -> NavType.IntType
