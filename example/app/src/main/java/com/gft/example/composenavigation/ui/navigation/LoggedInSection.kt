@@ -5,6 +5,7 @@ import androidx.navigation.NavHostController
 import com.gft.destinations.Destination
 import com.gft.destinations.composable
 import com.gft.destinations.navigation
+import com.gft.example.composenavigation.account.ui.navigation.accountFeatureSections
 import com.gft.example.composenavigation.cards.ui.navigation.cardFeatureSections
 import com.gft.example.composenavigation.ui.screens.homescreen.HomeScreen
 
@@ -21,11 +22,12 @@ fun NavGraphBuilder.loggedInSection(
     ) {
         composable(HomeScreenDestination) {
             HomeScreen(
-                onNavigateToAccountDetails = {},
                 onNavigationRequest = {},
                 navController = navController
             )
         }
+
+        accountFeatureSections(navController)
 
         cardFeatureSections(navController)
     }

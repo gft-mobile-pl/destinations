@@ -1,4 +1,4 @@
-package com.gft.example.composenavigation.account.ui.accountsummary
+package com.gft.example.composenavigation.account.ui.screens.accountsummary
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -14,9 +14,9 @@ import androidx.compose.ui.unit.dp
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
-fun AccountSummary(
-    modifier: Modifier = Modifier,
-    onNavigateToAccountDetails: () -> Unit
+internal fun AccountSummary(
+    onNavigateToAccountDetails: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = Modifier
@@ -38,7 +38,7 @@ fun AccountSummary(
 
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
-fun LoginScreenPreview() {
+private fun LoginScreenPreview() {
     ComposeMultimoduleNavigationTheme() {
         AccountSummary(onNavigateToAccountDetails = { })
     }

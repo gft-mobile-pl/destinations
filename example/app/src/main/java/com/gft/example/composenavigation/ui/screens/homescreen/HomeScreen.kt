@@ -32,7 +32,7 @@ import com.gft.destinations.Destination.DestinationWithoutArgument
 import com.gft.destinations.NavHost
 import com.gft.destinations.composable
 import com.gft.destinations.navigate
-import com.gft.example.composenavigation.account.ui.accountsummary.AccountSummary
+import com.gft.example.composenavigation.account.ui.navigation.accountSummary
 import com.gft.example.composenavigation.cards.ui.navigation.cardsSummarySection
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
@@ -47,7 +47,6 @@ private enum class Section(val icon: ImageVector, val label: String, val destina
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToAccountDetails: () -> Unit,
     onNavigationRequest: (Any) -> Unit,
     navController: NavController
 ) {
@@ -85,9 +84,7 @@ fun HomeScreen(
             composable(Section.WIDGETS.destination) {
                 Text("Widgets go here...")
             }
-            composable(Section.ACCOUNT.destination) {
-                AccountSummary(onNavigateToAccountDetails = onNavigateToAccountDetails)
-            }
+            accountSummary(navController, Section.ACCOUNT.destination)
             cardsSummarySection(navController = navController, Section.CARD.destination)
         }
     }
@@ -98,7 +95,6 @@ fun HomeScreen(
 fun HomeScreenPreview() {
     ComposeMultimoduleNavigationTheme() {
         HomeScreen(
-            onNavigateToAccountDetails = {},
             onNavigationRequest = {},
             navController = rememberNavController()
         )
