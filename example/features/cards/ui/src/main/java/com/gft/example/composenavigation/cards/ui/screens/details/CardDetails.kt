@@ -23,6 +23,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 internal fun CardDetails(
     modifier: Modifier = Modifier,
     card: CardArgument,
+    onNavigateToAccountDetails: () -> Unit,
     onNavigateToFreezeCard: (CardArgument) -> Unit
 ) {
     val cardDetails = CardRepositoryMock.getCardDetails(card.cardId)
@@ -62,6 +63,21 @@ internal fun CardDetails(
                 }
             }
         }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = "Cross-feature navigation",
+            style = MaterialTheme.typography.headlineLarge
+        )
+        Text(
+            text = "The link below demonstrates how to navigate to some screen of a different feature which " +
+                "may not even be our dependency.",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Button(
+            onClick = { onNavigateToAccountDetails() }
+        ) {
+            Text("Cross navigate to account details")
+        }
     }
 }
 
@@ -71,6 +87,7 @@ fun CardDetailsPreview() {
     ComposeMultimoduleNavigationTheme() {
         CardDetails(
             card = CardArgument("#1"),
+            onNavigateToAccountDetails = {},
             onNavigateToFreezeCard = {}
         )
     }

@@ -3,6 +3,8 @@ package com.gft.example.composenavigation.cards.ui.screens.summary
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
@@ -22,7 +24,8 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 internal fun CardsSummary(
     modifier: Modifier = Modifier,
     onNavigateToCardDetails: (CardArgument) -> Unit,
-    onNavigateToFreezeCard: (CardArgument) -> Unit
+    onNavigateToFreezeCard: (CardArgument) -> Unit,
+    onNavigateToAccountDetails: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -71,6 +74,21 @@ internal fun CardsSummary(
                 }
             }
         }
+        Spacer(modifier = Modifier.weight(1f))
+        Text(
+            text = "Cross-feature navigation",
+            style = MaterialTheme.typography.headlineLarge
+        )
+        Text(
+            text = "The link below demonstrates how to navigate to some screen of a different feature which " +
+                "may not even be our dependency.",
+            style = MaterialTheme.typography.bodyMedium
+        )
+        Button(
+            onClick = { onNavigateToAccountDetails() }
+        ) {
+            Text("Cross navigate to account details")
+        }
     }
 }
 
@@ -80,7 +98,8 @@ fun CardsSummaryPreview() {
     ComposeMultimoduleNavigationTheme() {
         CardsSummary(
             onNavigateToCardDetails = {},
-            onNavigateToFreezeCard = {}
+            onNavigateToFreezeCard = {},
+            onNavigateToAccountDetails = {}
         )
     }
 }

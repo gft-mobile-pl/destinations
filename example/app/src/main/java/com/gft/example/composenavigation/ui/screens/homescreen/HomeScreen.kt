@@ -3,6 +3,7 @@ package com.gft.example.composenavigation.ui.screens.homescreen
 import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
@@ -47,6 +48,7 @@ private enum class Section(val icon: ImageVector, val label: String, val destina
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    onNavigateToAccountDetails: () -> Unit,
     onNavigationRequest: (Any) -> Unit,
     navController: NavController
 ) {
@@ -79,13 +81,17 @@ fun HomeScreen(
                 )
             }
         }
-    }) {
-        NavHost(navController = tabsNavController, startDestination = Section.WIDGETS.destination) {
+    }) { innerPadding ->
+        NavHost(
+            navController = tabsNavController,
+            startDestination = Section.WIDGETS.destination,
+            modifier = Modifier.padding(innerPadding)
+        ) {
             composable(Section.WIDGETS.destination) {
                 Text("Widgets go here...")
             }
             accountSummary(navController, Section.ACCOUNT.destination)
-            cardsSummarySection(navController = navController, Section.CARD.destination)
+            cardsSummarySection(navController = navController, Section.CARD.destination, onNavigateToAccountDetails)
         }
     }
 }
@@ -96,6 +102,7 @@ fun HomeScreenPreview() {
     ComposeMultimoduleNavigationTheme() {
         HomeScreen(
             onNavigationRequest = {},
+            onNavigateToAccountDetails = {},
             navController = rememberNavController()
         )
     }
