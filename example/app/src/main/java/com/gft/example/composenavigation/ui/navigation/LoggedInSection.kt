@@ -2,13 +2,10 @@ package com.gft.example.composenavigation.ui.navigation
 
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.navOptions
 import com.gft.destinations.Destination
 import com.gft.destinations.composable
 import com.gft.destinations.navigation
-import com.gft.destinations.popBackStack
-import com.gft.destinations.redirect
-import com.gft.example.composenavigation.cards.ui.navigation.freezeCardSection
+import com.gft.example.composenavigation.cards.ui.navigation.cardFeatureSections
 import com.gft.example.composenavigation.ui.screens.homescreen.HomeScreen
 
 val LoggedInSectionDestination = Destination.withoutArgument()
@@ -31,10 +28,6 @@ fun NavGraphBuilder.loggedInSection(
             )
         }
 
-        freezeCardSection(
-            onNavigateToNextAfterCardFrozen = { navController.popBackStack(destination = HomeScreenDestination, inclusive = false) }
-        )
+        cardFeatureSections(navController)
     }
-
-
 }

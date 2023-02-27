@@ -32,6 +32,7 @@ import com.gft.destinations.NavHost
 import com.gft.destinations.composable
 import com.gft.destinations.navigate
 import com.gft.example.composenavigation.account.ui.accountsummary.AccountSummary
+import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.cards.ui.screens.summary.CardsSummary
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
@@ -47,8 +48,8 @@ private enum class Section(val icon: ImageVector, val label: String, val destina
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToAccountDetails: () -> Unit,
-    onNavigateToCardDetails: (String) -> Unit,
-    onNavigateToFreezeCard: (String) -> Unit,
+    onNavigateToCardDetails: (CardArgument) -> Unit,
+    onNavigateToFreezeCard: (CardArgument) -> Unit,
     onNavigationRequest: (Any) -> Unit
 ) {
     val internalNavController: NavHostController = rememberNavController()

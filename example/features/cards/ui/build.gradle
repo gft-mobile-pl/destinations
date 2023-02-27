@@ -35,7 +35,9 @@ android {
     buildFeatures {
         compose true
     }
-
+    composeOptions {
+        kotlinCompilerExtensionVersion '1.4.1'
+    }
     packagingOptions {
         resources {
             excludes += '/META-INF/{AL2.0,LGPL2.1}'
@@ -48,7 +50,7 @@ dependencies {
     implementation project(':example:common:ui')
     implementation project(':example:common:theme')
 
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation "androidx.core:core-ktx:$core_ktx_version"
     implementation "androidx.lifecycle:lifecycle-viewmodel-compose:$lifecycle_version"
     implementation "androidx.lifecycle:lifecycle-runtime-compose:$compose_lifecycle_runtime"
 
