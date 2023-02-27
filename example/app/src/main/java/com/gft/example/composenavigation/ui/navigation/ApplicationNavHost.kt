@@ -16,7 +16,7 @@ import com.gft.example.composenavigation.ui.screens.welcomescreen.WelcomeScreen
 private val WelcomeScreenDestination = Destination.withoutArgument()
 
 @Composable
-fun ApplicationGraph(
+fun ApplicationNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
