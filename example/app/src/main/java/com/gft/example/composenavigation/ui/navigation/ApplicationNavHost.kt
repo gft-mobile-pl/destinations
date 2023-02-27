@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navOptions
 import com.gft.destinations.Destination
 import com.gft.destinations.NavHost
 import com.gft.destinations.composable
@@ -32,7 +33,9 @@ fun ApplicationNavHost(
         }
 
         loginSection(
-            onNavigateToNextAfterSuccessfulLogin = redirect(navController, LoggedInSectionDestination),
+            onNavigateToNextAfterSuccessfulLogin = redirect(navController, LoggedInSectionDestination, navOptions {
+                popUpTo(WelcomeScreenDestination.id) { inclusive = false }
+            }),
             navController = navController
         )
 
