@@ -20,7 +20,7 @@ import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
-fun CardDetails(
+internal fun CardDetails(
     modifier: Modifier = Modifier,
     card: CardArgument,
     onNavigateToFreezeCard: (CardArgument) -> Unit

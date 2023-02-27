@@ -17,7 +17,7 @@ import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
-fun CardFreezeWarning(
+internal fun CardFreezeWarning(
     card: CardArgument,
     onNavigateToConfirmation: (CardArgument) -> Unit,
     modifier: Modifier = Modifier

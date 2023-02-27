@@ -19,7 +19,7 @@ import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
-fun CardFreezeConfirmation(
+internal fun CardFreezeConfirmation(
     card: CardArgument,
     onNavigateToNextAfterCardFrozen: () -> Unit,
     onNavigateToNextAfterCardFreezeAborted: () -> Unit,
