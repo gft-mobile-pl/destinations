@@ -31,15 +31,16 @@ import kotlinx.parcelize.Parcelize
 data class CardArgument(val cardId: String) : Parcelable
 
 fun NavGraphBuilder.cardFeatureSections(navController: NavController) {
-    cardsSummarySection(navController, CardsSummarySectionDestination)
-    cardDetailsSection(navController, CardDetailsSectionDestination)
-    freezeCardSection(navController, FreezeCardSectionDestination)
+    cardsSummarySection(navController)
+    cardDetailsSection(navController)
+    freezeCardSection(navController)
 }
 
 /**
  * Cards summary section (aka cards list)
  */
 val CardsSummarySectionDestination = Destination.withoutArgument()
+internal fun NavGraphBuilder.cardsSummarySection(navController: NavController) = cardsSummarySection(navController, CardsSummarySectionDestination)
 fun NavGraphBuilder.cardsSummarySection(
     navController: NavController,
     starDestination: DestinationWithoutArgument
@@ -56,6 +57,7 @@ fun NavGraphBuilder.cardsSummarySection(
  * Card details section.
  */
 val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()
+internal fun NavGraphBuilder.cardDetailsSection(navController: NavController) = cardDetailsSection(navController, CardDetailsSectionDestination)
 fun NavGraphBuilder.cardDetailsSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>
@@ -74,6 +76,7 @@ fun NavGraphBuilder.cardDetailsSection(
 val FreezeCardSectionDestination = Destination.withArgument<CardArgument>()
 private val FreezeCardWarningDestination = Destination.withArgument<CardArgument>()
 private val FreezeCardConfirmationDestination = Destination.withArgument<CardArgument>()
+internal fun NavGraphBuilder.freezeCardSection(navController: NavController) = freezeCardSection(navController, FreezeCardSectionDestination)
 fun NavGraphBuilder.freezeCardSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>

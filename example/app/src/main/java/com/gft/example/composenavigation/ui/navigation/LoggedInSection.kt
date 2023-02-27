@@ -22,9 +22,8 @@ fun NavGraphBuilder.loggedInSection(
         composable(HomeScreenDestination) {
             HomeScreen(
                 onNavigateToAccountDetails = {},
-                onNavigateToCardDetails = {},
-                onNavigateToFreezeCard = {},
-                onNavigationRequest = {}
+                onNavigationRequest = {},
+                navController = navController
             )
         }
 

@@ -22,6 +22,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -32,8 +33,7 @@ import com.gft.destinations.NavHost
 import com.gft.destinations.composable
 import com.gft.destinations.navigate
 import com.gft.example.composenavigation.account.ui.accountsummary.AccountSummary
-import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
-import com.gft.example.composenavigation.cards.ui.screens.summary.CardsSummary
+import com.gft.example.composenavigation.cards.ui.navigation.cardsSummarySection
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 private enum class Section(val icon: ImageVector, val label: String, val destination: DestinationWithoutArgument) {
@@ -48,18 +48,17 @@ private enum class Section(val icon: ImageVector, val label: String, val destina
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToAccountDetails: () -> Unit,
-    onNavigateToCardDetails: (CardArgument) -> Unit,
-    onNavigateToFreezeCard: (CardArgument) -> Unit,
-    onNavigationRequest: (Any) -> Unit
+    onNavigationRequest: (Any) -> Unit,
+    navController: NavController
 ) {
-    val internalNavController: NavHostController = rememberNavController()
+    val tabsNavController: NavHostController = rememberNavController()
     Scaffold(modifier = modifier, bottomBar = {
         NavigationBar(
             modifier = Modifier
                 .height(72.dp)
                 .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
         ) {
-            val currentBackStackEntry = internalNavController.currentBackStackEntryFlow.collectAsState(internalNavController.currentBackStackEntry)
+            val currentBackStackEntry = tabsNavController.currentBackStackEntryFlow.collectAsState(tabsNavController.currentBackStackEntry)
             Section.values().forEach { section ->
                 NavigationBarItem(
                     icon = {
@@ -70,8 +69,8 @@ fun HomeScreen(
                     },
                     selected = currentBackStackEntry.value?.destination?.hierarchy?.any { it.id == section.destination.id } == true,
                     onClick = {
-                        internalNavController.navigate(section.destination) {
-                            popUpTo(internalNavController.graph.findStartDestination().id) {
+                        tabsNavController.navigate(section.destination) {
+                            popUpTo(tabsNavController.graph.findStartDestination().id) {
                                 saveState = true // optional (required ONLY IF sections may have inner navigation (better not))
                             }
                             launchSingleTop = true
@@ -82,19 +81,14 @@ fun HomeScreen(
             }
         }
     }) {
-        NavHost(navController = internalNavController, startDestination = Section.WIDGETS.destination) {
+        NavHost(navController = tabsNavController, startDestination = Section.WIDGETS.destination) {
             composable(Section.WIDGETS.destination) {
                 Text("Widgets go here...")
             }
             composable(Section.ACCOUNT.destination) {
                 AccountSummary(onNavigateToAccountDetails = onNavigateToAccountDetails)
             }
-            composable(Section.CARD.destination) {
-                CardsSummary(
-                    onNavigateToCardDetails = onNavigateToCardDetails,
-                    onNavigateToFreezeCard = onNavigateToFreezeCard
-                )
-            }
+            cardsSummarySection(navController = navController, Section.CARD.destination)
         }
     }
 }
@@ -105,9 +99,8 @@ fun HomeScreenPreview() {
     ComposeMultimoduleNavigationTheme() {
         HomeScreen(
             onNavigateToAccountDetails = {},
-            onNavigateToCardDetails = {},
-            onNavigateToFreezeCard = {},
-            onNavigationRequest = {}
+            onNavigationRequest = {},
+            navController = rememberNavController()
         )
     }
 }
