@@ -13,12 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
 fun CardFreezeWarning(
-    modifier: Modifier = Modifier,
-    onNavigateToConfirmation: () -> Unit
+    card: CardArgument,
+    onNavigateToConfirmation: (CardArgument) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
@@ -40,7 +42,7 @@ fun CardFreezeWarning(
                 horizontalArrangement = Arrangement.Center
             ) {
                 Button(
-                    onClick = { onNavigateToConfirmation() }
+                    onClick = { onNavigateToConfirmation(card) }
                 ) {
                     Text("Continue")
                 }
@@ -54,6 +56,7 @@ fun CardFreezeWarning(
 fun CardFreezeWarningPreview() {
     ComposeMultimoduleNavigationTheme() {
         CardFreezeWarning(
+            card = CardArgument("#1"),
             onNavigateToConfirmation = {}
         )
     }

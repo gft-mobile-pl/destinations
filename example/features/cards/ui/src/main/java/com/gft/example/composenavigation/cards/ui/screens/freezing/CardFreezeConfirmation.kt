@@ -20,10 +20,10 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 
 @Composable
 fun CardFreezeConfirmation(
-    modifier: Modifier = Modifier,
     card: CardArgument,
     onNavigateToNextAfterCardFrozen: () -> Unit,
-    onNavigateToNextAfterCardFreezeAborted: () -> Unit
+    onNavigateToNextAfterCardFreezeAborted: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier

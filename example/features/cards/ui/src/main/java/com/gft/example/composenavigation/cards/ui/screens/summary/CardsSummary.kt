@@ -13,13 +13,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.gft.example.composenavigation.cards.data.CardRepositoryMock
+import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
 @Composable
 fun CardsSummary(
     modifier: Modifier = Modifier,
-    onNavigateToCardDetails: (String) -> Unit,
-    onNavigateToFreezeCard: (String) -> Unit
+    onNavigateToCardDetails: (CardArgument) -> Unit,
+    onNavigateToFreezeCard: (CardArgument) -> Unit
 ) {
     Column(
         modifier = modifier
@@ -27,48 +30,43 @@ fun CardsSummary(
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
+        val cardsList = CardRepositoryMock.cardsList.collectAsStateWithLifecycle()
+
         Text(
             text = "Cards summary",
             style = MaterialTheme.typography.headlineLarge
         )
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Text("Card #1")
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+
+        cardsList.value.forEach { card ->
+            Card(modifier = Modifier.fillMaxWidth()) {
+                Column(
+                    modifier = Modifier.padding(12.dp)
                 ) {
-                    Button(
-                        onClick = { onNavigateToCardDetails("#1") }
+                    Text("Card ${card.id}")
+                    Row(
+                        horizontalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
-                        Text("Details")
-                    }
-                    Button(
-                        onClick = { onNavigateToFreezeCard("#1") }
-                    ) {
-                        Text("Freeze")
-                    }
-                }
-            }
-        }
-        Card(modifier = Modifier.fillMaxWidth()) {
-            Column(
-                modifier = Modifier.padding(12.dp)
-            ) {
-                Text("Card #2")
-                Row(
-                    horizontalArrangement = Arrangement.spacedBy(8.dp)
-                ) {
-                    Button(
-                        onClick = { onNavigateToCardDetails("#2") }
-                    ) {
-                        Text("Details")
-                    }
-                    Button(
-                        onClick = { onNavigateToFreezeCard("#2") }
-                    ) {
-                        Text("Freeze")
+                        Button(
+                            onClick = { onNavigateToCardDetails(CardArgument(card.id)) }
+                        ) {
+                            Text("Details")
+                        }
+                        if (card.isFrozen) {
+                            Button(
+                                onClick = {
+                                    CardRepositoryMock.unfreezeCard(card.id)
+                                }
+                            ) {
+                                Text("Unfreeze")
+                            }
+                        } else {
+                            Button(
+                                onClick = { onNavigateToFreezeCard(CardArgument(card.id)) }
+                            ) {
+                                Text("Freeze")
+                            }
+                        }
+
                     }
                 }
             }
