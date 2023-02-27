@@ -53,10 +53,10 @@ internal fun NavGraphBuilder.cardsSummarySection(
 
 fun NavGraphBuilder.cardsSummarySection(
     navController: NavController,
-    starDestination: DestinationWithoutArgument,
+    sectionDestination: DestinationWithoutArgument,
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
 ) {
-    composable(starDestination) {
+    composable(sectionDestination) {
         CardsSummary(
             onNavigateToCardDetails = redirect(navController, CardDetailsSectionDestination),
             onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
