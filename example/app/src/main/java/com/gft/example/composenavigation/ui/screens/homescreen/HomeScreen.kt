@@ -33,9 +33,10 @@ import com.gft.destinations.Destination.DestinationWithoutArgument
 import com.gft.destinations.NavHost
 import com.gft.destinations.composable
 import com.gft.destinations.navigate
-import com.gft.example.composenavigation.account.ui.navigation.accountSummary
+import com.gft.example.composenavigation.account.ui.navigation.accountSummarySection
 import com.gft.example.composenavigation.cards.ui.navigation.cardsSummarySection
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
+import com.gft.example.composenavigation.ui.screens.widgetscreen.WidgetsScreen
 
 private enum class Section(val icon: ImageVector, val label: String, val destination: DestinationWithoutArgument) {
     WIDGETS(Icons.Filled.Home, "Home", Destination.withoutArgument()),
@@ -88,9 +89,9 @@ fun HomeScreen(
             modifier = Modifier.padding(innerPadding)
         ) {
             composable(Section.WIDGETS.destination) {
-                Text("Widgets go here...")
+                WidgetsScreen(onNavigationRequest = onNavigationRequest, navController = navController)
             }
-            accountSummary(navController, Section.ACCOUNT.destination)
+            accountSummarySection(navController, Section.ACCOUNT.destination)
             cardsSummarySection(navController = navController, Section.CARD.destination, onNavigateToAccountDetails)
         }
     }

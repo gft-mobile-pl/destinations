@@ -1,6 +1,7 @@
 package com.gft.example.composenavigation.cards.ui.navigation
 
 import android.os.Parcelable
+import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavGraphBuilder
 import com.gft.destinations.Destination
@@ -14,6 +15,7 @@ import com.gft.example.composenavigation.cards.ui.screens.details.CardDetails
 import com.gft.example.composenavigation.cards.ui.screens.freezing.CardFreezeConfirmation
 import com.gft.example.composenavigation.cards.ui.screens.freezing.CardFreezeWarning
 import com.gft.example.composenavigation.cards.ui.screens.summary.CardsSummary
+import com.gft.example.composenavigation.cards.ui.screens.widget.CardsFeatureWidget
 import kotlinx.parcelize.Parcelize
 
 /**
@@ -21,7 +23,8 @@ import kotlinx.parcelize.Parcelize
  * - CardFeatureSections
  * - CardsSummarySection
  * - CardDetailsSection
- * - FreezeCardSection.
+ * - FreezeCardSection
+ * - Cards widget.
  */
 
 /**
@@ -118,4 +121,20 @@ fun NavGraphBuilder.freezeCardSection(
             )
         }
     }
+}
+
+/**
+ * Cards widget.
+ */
+object NavigateToAccountDetailsRequest
+
+@Composable
+fun CardsFeatureWidget(
+    navController: NavController,
+    onNavigateToAccountDetails: (NavigateToAccountDetailsRequest) -> Unit
+) {
+    CardsFeatureWidget(
+        onNavigateToCardDetails = redirect(navController, CardDetailsSectionDestination),
+        onNavigateToAccountDetails = { onNavigateToAccountDetails(NavigateToAccountDetailsRequest) }
+    )
 }
