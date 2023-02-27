@@ -12,11 +12,10 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gft.example.composenavigation.cards.data.CardRepositoryMock
 import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
@@ -26,15 +25,16 @@ fun CardDetails(
     card: CardArgument,
     onNavigateToFreezeCard: (CardArgument) -> Unit
 ) {
+    val cardDetails = CardRepositoryMock.getCardDetails(card.cardId)
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
-        val cardId = remember { card.cardId }
         Text(
-            text = "Card $cardId details",
+            text = "Card ${cardDetails.id} details",
             style = MaterialTheme.typography.headlineLarge
         )
         Card(modifier = Modifier.fillMaxWidth()) {
@@ -43,15 +43,21 @@ fun CardDetails(
             ) {
                 Text("Some card description")
                 Spacer(modifier = Modifier.height(12.dp))
-                Text("Note: We don't keep track of the card state in this example (e.g. if it is frozen already).", color = Color.Red)
-                Spacer(modifier = Modifier.height(12.dp))
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    Button(
-                        onClick = { onNavigateToFreezeCard(card) }
-                    ) {
-                        Text("Freeze")
+                    if (cardDetails.isFrozen) {
+                        Button(
+                            onClick = { CardRepositoryMock.unfreezeCard(cardDetails.id) }
+                        ) {
+                            Text("Unfreeze")
+                        }
+                    } else {
+                        Button(
+                            onClick = { onNavigateToFreezeCard(CardArgument(cardDetails.id)) }
+                        ) {
+                            Text("Freeze")
+                        }
                     }
                 }
             }

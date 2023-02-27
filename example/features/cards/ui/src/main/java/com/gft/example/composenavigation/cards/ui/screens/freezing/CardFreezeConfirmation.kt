@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.gft.example.composenavigation.cards.data.CardRepositoryMock
 import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
@@ -38,7 +39,10 @@ fun CardFreezeConfirmation(
             horizontalArrangement = Arrangement.spacedBy(8.dp)
         ) {
             Button(
-                onClick = { onNavigateToNextAfterCardFrozen() }
+                onClick = {
+                    CardRepositoryMock.freezeCard(card.cardId)
+                    onNavigateToNextAfterCardFrozen()
+                }
             ) {
                 Text("Freeze")
             }
