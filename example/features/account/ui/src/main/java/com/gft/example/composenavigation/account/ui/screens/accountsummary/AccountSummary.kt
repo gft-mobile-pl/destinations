@@ -19,7 +19,7 @@ internal fun AccountSummary(
     modifier: Modifier = Modifier
 ) {
     Column(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .padding(12.dp),
         verticalArrangement = Arrangement.spacedBy(12.dp)
