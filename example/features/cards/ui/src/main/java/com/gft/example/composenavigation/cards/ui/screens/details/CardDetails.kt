@@ -15,6 +15,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.gft.example.composenavigation.cards.data.CardRepositoryMock
 import com.gft.example.composenavigation.cards.ui.navigation.CardArgument
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
@@ -26,7 +27,8 @@ internal fun CardDetails(
     onNavigateToAccountDetails: () -> Unit,
     onNavigateToFreezeCard: (CardArgument) -> Unit
 ) {
-    val cardDetails = CardRepositoryMock.getCardDetails(card.cardId)
+    val cardDetails = CardRepositoryMock.streamCardDetails(card.cardId)
+        .collectAsStateWithLifecycle(initialValue = CardRepositoryMock.getCardDetails(card.cardId))
 
     Column(
         modifier = modifier
@@ -35,7 +37,7 @@ internal fun CardDetails(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Card ${cardDetails.id} details",
+            text = "Card ${cardDetails.value.id} details",
             style = MaterialTheme.typography.headlineLarge
         )
         Card(modifier = Modifier.fillMaxWidth()) {
@@ -47,15 +49,15 @@ internal fun CardDetails(
                 Row(
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    if (cardDetails.isFrozen) {
+                    if (cardDetails.value.isFrozen) {
                         Button(
-                            onClick = { CardRepositoryMock.unfreezeCard(cardDetails.id) }
+                            onClick = { CardRepositoryMock.unfreezeCard(cardDetails.value.id) }
                         ) {
                             Text("Unfreeze")
                         }
                     } else {
                         Button(
-                            onClick = { onNavigateToFreezeCard(CardArgument(cardDetails.id)) }
+                            onClick = { onNavigateToFreezeCard(CardArgument(cardDetails.value.id)) }
                         ) {
                             Text("Freeze")
                         }
