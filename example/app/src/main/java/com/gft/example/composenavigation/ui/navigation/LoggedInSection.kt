@@ -34,13 +34,16 @@ fun NavGraphBuilder.loggedInSection(
             )
 
             HomeScreen(
+                onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination),
+                navController = navController,
+
+                /* This callback is here just to demonstrate a very rare case of unnamed/context-less navigation
+                *  which generally should be avoided. */
                 onNavigationRequest = { request ->
                     when (request) {
                         NavigateToAccountDetailsRequest -> navController.navigate(AccountDetailsDestination)
                     }
                 },
-                onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination),
-                navController = navController
             )
         }
 

@@ -50,7 +50,7 @@ private enum class Section(val icon: ImageVector, val label: String, val destina
 fun HomeScreen(
     modifier: Modifier = Modifier,
     onNavigateToAccountDetails: () -> Unit,
-    onNavigationRequest: (Any) -> Unit,
+    onNavigationRequest: (Any) -> Unit, // this callback is here to demonstrate a very rare case of unnamed/context-less navigation
     navController: NavController
 ) {
     val tabsNavController: NavHostController = rememberNavController()
