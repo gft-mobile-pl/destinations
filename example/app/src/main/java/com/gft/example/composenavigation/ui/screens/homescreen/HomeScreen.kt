@@ -16,52 +16,35 @@ import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.State
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
-import androidx.navigation.NavDestination.Companion.hierarchy
-import androidx.navigation.NavGraph.Companion.findStartDestination
-import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
-import com.gft.destinations.Destination
-import com.gft.destinations.Destination.DestinationWithoutArgument
-import com.gft.destinations.NavHost
-import com.gft.destinations.composable
-import com.gft.destinations.navigate
-import com.gft.example.composenavigation.account.ui.navigation.accountSummarySection
-import com.gft.example.composenavigation.cards.ui.navigation.cardsSummarySection
-import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
-import com.gft.example.composenavigation.ui.screens.widgetscreen.WidgetsScreen
 
-private enum class Section(val icon: ImageVector, val label: String, val destination: DestinationWithoutArgument) {
-    WIDGETS(Icons.Filled.Home, "Home", Destination.withoutArgument()),
-    ACCOUNT(Icons.Filled.Person, "Account", Destination.withoutArgument()),
-    CARD(Icons.Filled.Warning, "Card", Destination.withoutArgument())
+internal enum class HomeScreenSection(val icon: ImageVector, val label: String) {
+    WIDGETS(Icons.Filled.Home, "Home"),
+    ACCOUNT(Icons.Filled.Person, "Account"),
+    CARD(Icons.Filled.Warning, "Card")
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
-fun HomeScreen(
+internal fun HomeScreen(
     modifier: Modifier = Modifier,
-    onNavigateToAccountDetails: () -> Unit,
-    onNavigationRequest: (Any) -> Unit, // this callback is here to demonstrate a very rare case of unnamed/context-less navigation
-    navController: NavController
+    selectedSection: State<HomeScreenSection>,
+    onSectionSelected: (HomeScreenSection) -> Unit,
+    sectionsNavHostBuilder: @Composable (modifier: Modifier) -> Unit
 ) {
-    val tabsNavController: NavHostController = rememberNavController()
     Scaffold(modifier = modifier, bottomBar = {
         NavigationBar(
             modifier = Modifier
                 .height(72.dp)
                 .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
         ) {
-            val currentBackStackEntry = tabsNavController.currentBackStackEntryFlow.collectAsState(tabsNavController.currentBackStackEntry)
-            Section.values().forEach { section ->
+            HomeScreenSection.values().forEach { section ->
                 NavigationBarItem(
                     icon = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
@@ -69,42 +52,12 @@ fun HomeScreen(
                             Text(text = section.label) // You could use `label` property of NavigationBarItem but the selection marker embraces the icon only (!)
                         }
                     },
-                    selected = currentBackStackEntry.value?.destination?.hierarchy?.any { it.id == section.destination.id } == true,
-                    onClick = {
-                        tabsNavController.navigate(section.destination) {
-                            popUpTo(tabsNavController.graph.findStartDestination().id) {
-                                saveState = true // optional (required ONLY IF sections may have inner navigation (better not))
-                            }
-                            launchSingleTop = true
-                            restoreState = true // optional (required ONLY IF sections may have inner navigation (better not))
-                        }
-                    }
+                    selected = selectedSection.value == section,
+                    onClick = { onSectionSelected(section) }
                 )
             }
         }
     }) { innerPadding ->
-        NavHost(
-            navController = tabsNavController,
-            startDestination = Section.WIDGETS.destination,
-            modifier = Modifier.padding(innerPadding)
-        ) {
-            composable(Section.WIDGETS.destination) {
-                WidgetsScreen(onNavigationRequest = onNavigationRequest, navController = navController)
-            }
-            accountSummarySection(navController, Section.ACCOUNT.destination)
-            cardsSummarySection(navController = navController, Section.CARD.destination, onNavigateToAccountDetails)
-        }
-    }
-}
-
-@Preview(showSystemUi = false, heightDp = 840)
-@Composable
-fun HomeScreenPreview() {
-    ComposeMultimoduleNavigationTheme() {
-        HomeScreen(
-            onNavigationRequest = {},
-            onNavigateToAccountDetails = {},
-            navController = rememberNavController()
-        )
+        sectionsNavHostBuilder(Modifier.padding(innerPadding))
     }
 }
