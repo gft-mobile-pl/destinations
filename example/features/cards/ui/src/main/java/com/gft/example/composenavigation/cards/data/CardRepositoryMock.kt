@@ -18,6 +18,12 @@ object CardRepositoryMock {
 
     val cardsList = MutableStateFlow(cards.values.toList())
 
+    fun cancelCard(id: String) {
+        val card = getCardDetails(id)
+        cards.remove(id)
+        cardsList.value = cards.values.toList()
+    }
+
     fun freezeCard(id: String) = changeCardFrozenStatus(id, true)
 
     fun unfreezeCard(id: String) = changeCardFrozenStatus(id, false)

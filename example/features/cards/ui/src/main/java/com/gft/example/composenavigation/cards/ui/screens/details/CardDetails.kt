@@ -25,7 +25,8 @@ internal fun CardDetails(
     modifier: Modifier = Modifier,
     card: CardArgument,
     onNavigateToAccountDetails: () -> Unit,
-    onNavigateToFreezeCard: (CardArgument) -> Unit
+    onNavigateToFreezeCard: (CardArgument) -> Unit,
+    onNavigateToCancelCard: (CardArgument) -> Unit
 ) {
     val cardDetails = CardRepositoryMock.streamCardDetails(card.cardId)
         .collectAsStateWithLifecycle(initialValue = CardRepositoryMock.getCardDetails(card.cardId))
@@ -62,6 +63,11 @@ internal fun CardDetails(
                             Text("Freeze")
                         }
                     }
+                    Button(
+                        onClick = { onNavigateToCancelCard(CardArgument(cardDetails.value.id)) }
+                    ) {
+                        Text("Cancel card")
+                    }
                 }
             }
         }
@@ -90,7 +96,8 @@ fun CardDetailsPreview() {
         CardDetails(
             card = CardArgument("#1"),
             onNavigateToAccountDetails = {},
-            onNavigateToFreezeCard = {}
+            onNavigateToFreezeCard = {},
+            onNavigateToCancelCard = {}
         )
     }
 }

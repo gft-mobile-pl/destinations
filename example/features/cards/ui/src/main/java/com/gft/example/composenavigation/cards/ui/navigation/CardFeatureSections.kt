@@ -11,6 +11,8 @@ import com.gft.destinations.composable
 import com.gft.destinations.navigation
 import com.gft.destinations.popBackStack
 import com.gft.destinations.redirect
+import com.gft.example.composenavigation.cards.ui.screens.cancel.CardCancellationConfirmation
+import com.gft.example.composenavigation.cards.ui.screens.cancel.CardCancellationWarning
 import com.gft.example.composenavigation.cards.ui.screens.details.CardDetails
 import com.gft.example.composenavigation.cards.ui.screens.freezing.CardFreezeConfirmation
 import com.gft.example.composenavigation.cards.ui.screens.freezing.CardFreezeWarning
@@ -69,6 +71,8 @@ fun NavGraphBuilder.cardsSummarySection(
  * Card details section.
  */
 val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()
+private val CardDetailsDestination = Destination.withArgument<CardArgument>()
+private val CancelCardSectionDestination = Destination.withArgument<CardArgument>()
 internal fun NavGraphBuilder.cardDetailsSection(
     navController: NavController,
     onNavigateToAccountDetails: () -> Unit
@@ -79,11 +83,25 @@ fun NavGraphBuilder.cardDetailsSection(
     sectionDestination: DestinationWithRequiredArgument<CardArgument>,
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
 ) {
-    composable(sectionDestination) { card ->
-        CardDetails(
-            card = card,
-            onNavigateToAccountDetails = onNavigateToAccountDetails,
-            onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination)
+    navigation(
+        destination = sectionDestination,
+        startDestination = CardDetailsDestination
+    ) {
+        composable(CardDetailsDestination) { card ->
+            CardDetails(
+                card = card,
+                onNavigateToAccountDetails = onNavigateToAccountDetails,
+                onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
+                onNavigateToCancelCard = redirect(navController, CancelCardSectionDestination)
+            )
+        }
+
+        cancelCardSection(
+            navController = navController,
+            onNavigateToNextAfterCardCancelled = {
+                navController.popBackStack(destination = sectionDestination, inclusive = true)
+            },
+            sectionDestination = CancelCardSectionDestination
         )
     }
 }
@@ -118,6 +136,40 @@ fun NavGraphBuilder.freezeCardSection(
                 card = arg,
                 onNavigateToNextAfterCardFrozen = { navController.popBackStack(sectionDestination, true) },
                 onNavigateToNextAfterCardFreezeAborted = { navController.popBackStack(sectionDestination, true) },
+            )
+        }
+    }
+}
+
+/**
+ * Cancel card section
+ */
+private val CancelCardWarningDestination = Destination.withArgument<CardArgument>()
+private val CancelCardConfirmationDestination = Destination.withArgument<CardArgument>()
+fun NavGraphBuilder.cancelCardSection(
+    navController: NavController,
+    onNavigateToNextAfterCardCancelled: () -> Unit,
+    sectionDestination: DestinationWithRequiredArgument<CardArgument>
+) {
+    navigation(
+        destination = sectionDestination,
+        startDestination = CancelCardWarningDestination
+    ) {
+        composable(CancelCardWarningDestination) { arg ->
+            CardCancellationWarning(
+                card = arg,
+                onNavigateToConfirmation = redirect(
+                    navController,
+                    CancelCardConfirmationDestination
+                ) // You should rather use Session instead of re-passing card argument, but this example focuses on navigation only.
+            )
+        }
+
+        composable(CancelCardConfirmationDestination) { arg ->
+            CardCancellationConfirmation(
+                card = arg,
+                onNavigateToNextAfterCardCancelled = onNavigateToNextAfterCardCancelled,
+                onNavigateToNextAfterCardCancellationAborted = { navController.popBackStack(sectionDestination, true) },
             )
         }
     }
