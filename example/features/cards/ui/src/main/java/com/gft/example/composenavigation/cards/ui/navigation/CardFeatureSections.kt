@@ -38,9 +38,10 @@ data class CardArgument(val cardId: String) : Parcelable
 
 fun NavGraphBuilder.cardFeatureSections(
     navController: NavController,
+    onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
 ) {
-    cardsSummarySection(navController, onNavigateToAccountDetails)
+    cardsSummarySection(navController, onNavigateToAccountSummary, onNavigateToAccountDetails)
     cardDetailsSection(navController, onNavigateToAccountDetails)
     freezeCardSection(navController)
 }
@@ -51,18 +52,21 @@ fun NavGraphBuilder.cardFeatureSections(
 val CardsSummarySectionDestination = Destination.withoutArgument()
 internal fun NavGraphBuilder.cardsSummarySection(
     navController: NavController,
+    onNavigateToAccountSummary: () -> Unit,
     onNavigateToAccountDetails: () -> Unit
-) = cardsSummarySection(navController, CardsSummarySectionDestination, onNavigateToAccountDetails)
+) = cardsSummarySection(navController, CardsSummarySectionDestination, onNavigateToAccountSummary, onNavigateToAccountDetails)
 
 fun NavGraphBuilder.cardsSummarySection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument,
+    onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
 ) {
     composable(sectionDestination) {
         CardsSummary(
             onNavigateToCardDetails = redirect(navController, CardDetailsSectionDestination),
             onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
+            onNavigateToAccountSummary = onNavigateToAccountSummary,
             onNavigateToAccountDetails = onNavigateToAccountDetails
         )
     }

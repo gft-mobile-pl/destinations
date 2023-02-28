@@ -25,7 +25,8 @@ internal fun CardsSummary(
     modifier: Modifier = Modifier,
     onNavigateToCardDetails: (CardArgument) -> Unit,
     onNavigateToFreezeCard: (CardArgument) -> Unit,
-    onNavigateToAccountDetails: () -> Unit
+    onNavigateToAccountDetails: () -> Unit,
+    onNavigateToAccountSummary: () -> Unit
 ) {
     Column(
         modifier = modifier
@@ -85,6 +86,11 @@ internal fun CardsSummary(
             style = MaterialTheme.typography.bodyMedium
         )
         Button(
+            onClick = { onNavigateToAccountSummary() }
+        ) {
+            Text("Cross navigate to account summary")
+        }
+        Button(
             onClick = { onNavigateToAccountDetails() }
         ) {
             Text("Cross navigate to account details")
@@ -99,7 +105,8 @@ fun CardsSummaryPreview() {
         CardsSummary(
             onNavigateToCardDetails = {},
             onNavigateToFreezeCard = {},
-            onNavigateToAccountDetails = {}
+            onNavigateToAccountDetails = {},
+            onNavigateToAccountSummary = {}
         )
     }
 }

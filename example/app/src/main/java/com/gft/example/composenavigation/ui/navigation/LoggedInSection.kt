@@ -7,6 +7,7 @@ import com.gft.destinations.navigate
 import com.gft.destinations.navigation
 import com.gft.destinations.redirect
 import com.gft.example.composenavigation.account.ui.navigation.AccountDetailsDestination
+import com.gft.example.composenavigation.account.ui.navigation.AccountSummaryDestination
 import com.gft.example.composenavigation.account.ui.navigation.accountFeatureSections
 import com.gft.example.composenavigation.cards.ui.navigation.NavigateToAccountDetailsRequest
 import com.gft.example.composenavigation.cards.ui.navigation.cardFeatureSections
@@ -43,6 +44,7 @@ fun NavGraphBuilder.loggedInSection(
         accountFeatureSections(navController)
 
         cardFeatureSections(
+            onNavigateToAccountSummary = redirect(navController, AccountSummaryDestination),
             onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination),
             navController = navController
         )

@@ -36,20 +36,21 @@ fun NavGraphBuilder.homeScreenSection(
                 } ?: HomeScreenSection.WIDGETS
             }
         }
+        val navigateToSection = { section: HomeScreenSection ->
+            sectionsNavController.navigate(section.toDestination()) {
+                popUpTo(sectionsNavController.graph.findStartDestination().id) {
+                    saveState = true // optional (required ONLY IF sections may have inner navigation (better not))
+                }
+                launchSingleTop = true
+                restoreState = true // optional (required ONLY IF sections may have inner navigation (better not))
+            }
+        }
 
         BackPressHandler(onBackPressed = onNavigateBack)
 
         HomeScreen(
             selectedSection = selectedSection,
-            onSectionSelected = { section ->
-                sectionsNavController.navigate(section.toDestination()) {
-                    popUpTo(sectionsNavController.graph.findStartDestination().id) {
-                        saveState = true // optional (required ONLY IF sections may have inner navigation (better not))
-                    }
-                    launchSingleTop = true
-                    restoreState = true // optional (required ONLY IF sections may have inner navigation (better not))
-                }
-            },
+            onSectionSelected = navigateToSection,
             sectionsNavHostBuilder = { modifier ->
                 NavHost(
                     navController = sectionsNavController,
@@ -71,6 +72,7 @@ fun NavGraphBuilder.homeScreenSection(
                             HomeScreenSection.CARD -> cardsSummarySection(
                                 navController = navController,
                                 sectionDestination = section.toDestination(),
+                                onNavigateToAccountSummary = { navigateToSection(HomeScreenSection.ACCOUNT) },
                                 onNavigateToAccountDetails = onNavigateToAccountDetails
                             )
                         }
