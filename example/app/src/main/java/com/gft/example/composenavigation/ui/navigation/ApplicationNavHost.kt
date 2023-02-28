@@ -14,19 +14,19 @@ import com.gft.example.composenavigation.login.ui.navigation.LoginSectionDestina
 import com.gft.example.composenavigation.login.ui.navigation.loginSection
 import com.gft.example.composenavigation.ui.screens.welcomescreen.WelcomeScreen
 
-private val WelcomeScreenDestination = Destination.withoutArgument()
-
 @Composable
 fun ApplicationNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
+    val welcomeScreenDestination = Destination.withoutArgument()
+
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = WelcomeScreenDestination
+        startDestination = welcomeScreenDestination
     ) {
-        composable(WelcomeScreenDestination) {
+        composable(welcomeScreenDestination) {
             WelcomeScreen(
                 onNavigateToNext = redirect(navController, LoginSectionDestination)
             )
@@ -34,14 +34,14 @@ fun ApplicationNavHost(
 
         loginSection(
             onNavigateToNextAfterSuccessfulLogin = redirect(navController, LoggedInSectionDestination, navOptions {
-                popUpTo(WelcomeScreenDestination.id) { inclusive = false }
+                popUpTo(welcomeScreenDestination.id) { inclusive = false }
             }),
             navController = navController
         )
 
         loggedInSection(
             onNavigateToNextAfterLogout = {
-                navController.popBackStack(destination = WelcomeScreenDestination, inclusive = false)
+                navController.popBackStack(destination = welcomeScreenDestination, inclusive = false)
             },
             navController = navController
         )
