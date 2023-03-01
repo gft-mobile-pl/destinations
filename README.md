@@ -1,5 +1,7 @@
 # Destinations: type-safe multi-module navigation
 
+[[_TOC_]]
+
 Currently Google suggests using `routes` to define destinations in Compose enabled projects. 
 Unfortunately `routes` based navigation has many limitations which cannot be easily mitigated and is generally a step back 
 when compared to `xml` based navigation.
