@@ -147,7 +147,7 @@ private val IntroductionDestination = Destination.withArgument<EditPasscodeArgum
 navigation(
   destination = EditPasscodeDestination,
   startDestination = IntroductionDestination,
-  defaultArgument = EditPasscodeMode.DEFINE
+  defaultArgument = EditPasscodeMode.DEFINE // default value defined for the whole graph
 ) {
   composable(IntroductionDestination) { arg -> // non-null argument
     Introdcution(mode = arg.mode)
@@ -155,6 +155,33 @@ navigation(
   ...
 }
 ```
+
+alternatively you may define 
+
+```kotlin
+@Parcelize
+data class EditPasscodeArgument(val mode: EditPasscodeMode) : Parcelable
+
+val EditPasscodeDestination = Destination.withOptionalArgument<EditPasscodeArgument>() // DestinationWithOptionalArgument
+private val IntroductionDestination = Destination.withOptionalArgument<EditPasscodeArgument>() // DestinationWithOptionalArgument
+
+...
+
+navigation(
+  destination = EditPasscodeDestination,
+  startDestination = IntroductionDestination
+) {
+  composable(
+    destination = IntroductionDestination,
+    defaultArgument = EditPasscodeMode.DEFINE // default value defined for a particular screen
+  ) { arg -> // non-null argument
+    Introdcution(mode = arg.mode)
+  }
+  ...
+}
+```
+
+
 The following table presents all possible redirections from `destination` to `startDestination`:
 
 | Graph's `destination`           | `defaultArgument` in `navigation` | `startDestination`              | `defaultArgument` in `composable` |
@@ -176,5 +203,8 @@ The following table presents all possible redirections from `destination` to `st
 > ⚠ Note: The types of the `destination` and `startDestination` arguments must match!
 
 > ℹ The signature of the `NavGraphBuilder.navigation` method enforces correct redirection to the `startDestination` - if you make a mistake it will be caught on a compile-time.  
+
+> ℹ Default value may be defined for the whole graph or for a particular `startDestination`. If you are experimenting with the `startDestination` a lot
+> a the moment it may be easier to define the default value in `navigation` so you don't have to repeat it for each screen just because that screen might serve a role of a `startDestination` at some point.
 
 
