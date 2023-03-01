@@ -28,8 +28,8 @@ internal fun CardDetails(
     onNavigateToFreezeCard: (CardArgument) -> Unit,
     onNavigateToCancelCard: (CardArgument) -> Unit
 ) {
-    val cardDetails = CardRepositoryMock.streamCardDetails(card.cardId)
-        .collectAsStateWithLifecycle(initialValue = CardRepositoryMock.getCardDetails(card.cardId))
+    val cardDetails = CardRepositoryMock.streamCardDetails(card.id)
+        .collectAsStateWithLifecycle(initialValue = CardRepositoryMock.getCardDetails(card.id))
 
     Column(
         modifier = modifier

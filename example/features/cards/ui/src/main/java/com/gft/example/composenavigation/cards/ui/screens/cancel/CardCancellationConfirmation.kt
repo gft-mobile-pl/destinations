@@ -3,11 +3,9 @@ package com.gft.example.composenavigation.cards.ui.screens.cancel
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -32,7 +30,7 @@ internal fun CardCancellationConfirmation(
         verticalArrangement = Arrangement.spacedBy(12.dp)
     ) {
         Text(
-            text = "Do you really want to cancel ${card.cardId} card?",
+            text = "Do you really want to cancel ${card.id} card?",
             style = MaterialTheme.typography.headlineLarge
         )
         Row(
@@ -40,7 +38,7 @@ internal fun CardCancellationConfirmation(
         ) {
             Button(
                 onClick = {
-                    CardRepositoryMock.cancelCard(card.cardId)
+                    CardRepositoryMock.cancelCard(card.id)
                     onNavigateToNextAfterCardCancelled()
                 }
             ) {

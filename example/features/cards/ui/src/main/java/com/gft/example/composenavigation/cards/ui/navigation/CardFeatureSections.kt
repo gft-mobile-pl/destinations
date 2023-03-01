@@ -34,7 +34,7 @@ import kotlinx.parcelize.Parcelize
  * Common Card argument used by many sections.
  */
 @Parcelize
-data class CardArgument(val cardId: String) : Parcelable
+data class CardArgument(val id: String) : Parcelable
 
 fun NavGraphBuilder.cardFeatureSections(
     navController: NavController,
