@@ -155,9 +155,9 @@ navigation(
   ...
 }
 ```
-The following table presents all possible redirection from `destination` to `startDestination`:
+The following table presents all possible redirections from `destination` to `startDestination`:
 
-| Graph `destination`             | `defaultArgument` in `navigation` | `startDestination`              | `defaultArgument` in `composable` |
+| Graph's `destination`           | `defaultArgument` in `navigation` | `startDestination`              | `defaultArgument` in `composable` |
 |---------------------------------|:---------------------------------:|---------------------------------|:---------------------------------:|
 | DestinationWithoutArgument      |                 ✖                 | DestinationWithoutArgument      |                 ✖                 |
 | DestinationWithoutArgument      |                 ✖                 | DestinationWithOptionalArgument |                 ✖                 |
