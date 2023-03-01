@@ -2,11 +2,11 @@
 
 [[_TOC_]]
 
-Currently Google suggests using `routes` to define destinations in Compose enabled projects. 
-Unfortunately `routes` based navigation has many limitations which cannot be easily mitigated and is generally a step back 
+Currently Google suggests using `routes` to define destinations in Compose enabled projects.
+Unfortunately `routes` based navigation has many limitations which cannot be easily mitigated and is generally a step back
 when compared to `xml` based navigation.
 
-`Destinations` library aims to deliver a similar set of features as `xml` based solution while avoiding the pitfalls of `routes`. 
+`Destinations` library aims to deliver a similar set of features as `xml` based solution while avoiding the pitfalls of `routes`.
 
 | Aspect                                            | Destinations                                                                                                                             | Routes                                                                                                                                     |
 |---------------------------------------------------|------------------------------------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------|
@@ -29,42 +29,48 @@ when compared to `xml` based navigation.
 
 ## Defining `Destinations`
 
-`Destination` represents a screen or a section of an application a user can navigate to. Each `Destination` servers a role of both 
+`Destination` represents a screen or a section of an application a user can navigate to. Each `Destination` servers a role of both
 an identifier of a navigation graph's node and screen's/section's argument definition.
 
 There are three types od `Desintations`:
+
 - `DestinationWithoutArgument`<br />
-  This is the `Destination` that would be used the most in almost any project - note that most of the time you don't have to pass any arguments to your screens if you use `Session` mechanism.  
+  This is the `Destination` that would be used the most in almost any project - note that most of the time you don't have to pass any
+  arguments to your screens if you use `Session` mechanism.
   ```kotlin
   val HomeScreenDestination = Destination.withoutArgument()  
   ```
 - `DestinationWithRequiredArgument<T : Parcelable>`
   This type of `Destination` is used usually used while embedding:
-  - Standalone screens displaying data of specific items (e.g. credit card, a person) 
-  - Subgraphs which contains a journey related to some specific items. Generally the argument will be passed to the first screen of the subgraph - check the next point.
-  - First screens of the subgraphs. It is only possible if the graph's argument and its first screen's argument are of the same type.
+    - Standalone screens displaying data of specific items (e.g. credit card, a person)
+    - Subgraphs which contains a journey related to some specific items. Generally the argument will be passed to the first screen of
+      the subgraph - check the next point.
+    - First screens of the subgraphs. It is only possible if the graph's argument and its first screen's argument are of the same type.
   ```kotlin
   @Parcelize
   data class CardArgument(val id: String) : Parcelable
   
   val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()  
   ```
-  > ⚠ You may use `Serializables` or primitives as arguments as well, but this is discouraged. Check Best Practices section for more details. 
+  > ⚠ You may use `Serializables` or primitives as arguments as well, but this is discouraged. Check Best Practices section for more
+  details.
 - `DestinationWithOptionalArgument`
   This type of `Destination` is very similar to `DestinationWithRequiredArgument` but it indicates that destination screen either:
-  - does not require argument and can handle `null`
-  - or does require argument but a default argument will be provided while placing the screen in the graph.
-  <br /> 
+    - does not require argument and can handle `null`
+    - or does require argument but a default argument will be provided while placing the screen in the graph.
+      <br />
   ```kotlin
   @Parcelize
   data class EditPasscodeArgument(val mode: EditPasscodeMode) : Parcelable
   
   val EditPasscodeSectionDestination = Destination.withOptionalArgument<EditPasscodeArgument>()
   ```
-  > ℹ Check Best Practices section for examples. 
-  
+  > ℹ Check Best Practices section for examples.
+
 ## Embedding screens and graphs
+
 You may embed the same set of items as with `routes` using the following overloaded methods:
+
 - `NavGraphBuilder.composable` to embed screens
 - `NavGraphBuilder.navigation` to embed sub-graphs
 - `NavGraphBuilder.dialog` to embed dialogs
@@ -72,69 +78,77 @@ You may embed the same set of items as with `routes` using the following overloa
 ### Composables
 
 `Destination` without argument:
+
 ```kotlin
 val HomeScreenDestination = Destination.withoutArgument()
 
 ...
 
 composable(HomeScreenDestination) { // no argument
-  HomeScreen()
+    HomeScreen()
 }
 ```
 
 `Destination` with required argument:
+
 ```kotlin
 @Parcelize
 data class CardArgument(val id: String) : Parcelable
+
 val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()
 
 ...
 
 composable(CardDetailsSectionDestination) { arg -> // non-null argument
-  CardDetails(cardId = arg.id)
+    CardDetails(cardId = arg.id)
 }
 ```
 
 `Destination` with optional argument:
+
 ```kotlin
 @Parcelize
 data class EditPasscodeArgument(val mode: EditPasscodeMode) : Parcelable
+
 val EditPasscodeIntroductionDestination = Destination.withOptionalArgument<EditPasscodeArgument>()
 
 ...
 
 composable(EditPasscodeIntroductionDestination) { arg -> // nullable argument
-  Introduction(mode = arg.mode ?: EditPasscodeMode.DEFINE)
+    Introduction(mode = arg.mode ?: EditPasscodeMode.DEFINE)
 }
 ```
+
 You may specify default value for `DestinationWithOptionalArgument`:
+
 ```kotlin
 composable(
-  destination = EditPasscodeIntroductionDestination,
-  defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE)
+    destination = EditPasscodeIntroductionDestination,
+    defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE)
 ) { arg -> // non-nullable argument
-  Introduction(mode = arg.mode)
+    Introduction(mode = arg.mode)
 }
 ```
 
 ### Dialogs
 
-Embedding `dialogs` is the same as embedding `composables`. The only difference is additional parameter `dialogProperties` 
+Embedding `dialogs` is the same as embedding `composables`. The only difference is additional parameter `dialogProperties`
 which you may use to define dialog behaviour.
-Refer to the official documentation for more details: https://developer.android.com/reference/kotlin/androidx/compose/ui/window/DialogProperties.
+Refer to the official documentation for more
+details: https://developer.android.com/reference/kotlin/androidx/compose/ui/window/DialogProperties.
 
 ```kotlin
     dialog(
-        LogoutDialogDestination,
-        dialogProperties = DialogProperties(dismissOnClickOutside = false)
-    ) {
-        LogoutDialog(...)
-    }
+    LogoutDialogDestination,
+    dialogProperties = DialogProperties(dismissOnClickOutside = false)
+) {
+    LogoutDialog(...)
+}
 ```
 
 ### Subgraphs
 
-Use `NavGraphBuilder.navigation` method to embed graph withing other graph. 
+Use `NavGraphBuilder.navigation` method to embed graph withing other graph.
 
 Whenever you build a graph you must define its `startDestination`. The `Destination` of the graph
 must define its argument in a way compatible with `Destination` of the `startDestination` to ensure type safety, e.g.
@@ -149,18 +163,18 @@ private val IntroductionDestination = Destination.withArgument<EditPasscodeArgum
 ...
 
 navigation(
-  destination = EditPasscodeDestination,
-  startDestination = IntroductionDestination,
-  defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE) // default value defined for the whole graph
+    destination = EditPasscodeDestination,
+    startDestination = IntroductionDestination,
+    defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE) // default value defined for the whole graph
 ) {
-  composable(IntroductionDestination) { arg -> // non-null argument
-    Introdcution(mode = arg.mode)
-  }
-  ...
+    composable(IntroductionDestination) { arg -> // non-null argument
+        Introdcution(mode = arg.mode)
+    }
+    ...
 }
 ```
 
-alternatively you may define 
+alternatively you may define
 
 ```kotlin
 @Parcelize
@@ -172,19 +186,18 @@ private val IntroductionDestination = Destination.withOptionalArgument<EditPassc
 ...
 
 navigation(
-  destination = EditPasscodeDestination,
-  startDestination = IntroductionDestination
+    destination = EditPasscodeDestination,
+    startDestination = IntroductionDestination
 ) {
-  composable(
-    destination = IntroductionDestination,
-    defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE) // default value defined for the particular screen
-  ) { arg -> // non-null argument
-    Introdcution(mode = arg.mode)
-  }
-  ...
+    composable(
+        destination = IntroductionDestination,
+        defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE) // default value defined for the particular screen
+    ) { arg -> // non-null argument
+        Introdcution(mode = arg.mode)
+    }
+    ...
 }
 ```
-
 
 The following table presents all possible redirections from `destination` to `startDestination`:
 
@@ -204,16 +217,21 @@ The following table presents all possible redirections from `destination` to `st
 | DestinationWithRequiredArgument |                 ✖                 | DestinationWithOptionalArgument |                 ✖                 |
 | DestinationWithRequiredArgument |                 ✖                 | DestinationWithOptionalArgument |        ✔ (will be ignored)        |
 | DestinationWithRequiredArgument |                 ✖                 | DestinationWithRequiredArgument |                 ✖                 |
+
 > ⚠ Note: The types of the `destination` and `startDestination` arguments must match!
 
-> ℹ The signature of the `NavGraphBuilder.navigation` method enforces correct redirection to the `startDestination` - if you make a mistake it will be caught on a compile-time.  
+> ℹ The signature of the `NavGraphBuilder.navigation` method enforces correct redirection to the `startDestination` - if you make a
+> mistake it will be caught on a compile-time.
 
-> ℹ Default value may be defined for the whole graph or for a particular `startDestination`. If you are experimenting with the `startDestination` a lot
-> a the moment it may be easier to define the default value in `navigation` so you don't have to repeat it for each screen just because that screen might serve a role of a `startDestination` at some point.
+> ℹ Default value may be defined for the whole graph or for a particular `startDestination`. If you are experimenting with
+> the `startDestination` a lot
+> a the moment it may be easier to define the default value in `navigation` so you don't have to repeat it for each screen just because
+> that screen might serve a role of a `startDestination` at some point.
 
 ## Displaying the nav-graph
 
-You need to use `com.gft.destinations.NavHost` to display the nav-graph. This is just an extended version of `androidx.navigation.compose.NavHost`
+You need to use `com.gft.destinations.NavHost` to display the nav-graph. This is just an extended version
+of `androidx.navigation.compose.NavHost`
 which supports `Destinations` in addition to `routes`.
 
 ```kotlin
@@ -224,13 +242,115 @@ NavHost(
     navController = navController,
     startDestination = WelcomeScreenDestination
 ) {
-  ...
-  composable(WelcomeScreenDestination) { ... }
-  ...
-  navigation(...) { ... }
-  dialog(...) { ... }
-  ...
+    ...
+    composable(WelcomeScreenDestination) { ... }
+    ...
+    navigation(...) { ... }
+    dialog(...) { ... }
+    ...
 }
 
 ```
 
+# Best practices
+
+This section covers the whole process of constructing navigation in a typical application.
+It starts with guidelines on defining arguments, screens, then describes process of creating application graph and ends with solutions
+to some common problems.
+
+Although examples presented in this section rely on `Destinations` the presented principles and advices apply to all projects based on
+Compose.
+
+## Arguments
+
+### What should/should not be passed as argument?
+
+- ⚠ You should never pass sensitive data as argument. Arguments are stored inside `Bundles` 
+  which are saved in plain text on the permanent storage each time activity (but not application process) is killed by the system.
+  <br />
+  Username, card number, account number etc. are all sensitive data as they can be easily linked to a particular persons
+  or constitute to an authorization data required to perform certain operations (e.g. payment). 
+  <br />
+  On the other hand a card identifier may not be a sensitive data (depending on the implementation of the whole ecosystem)
+  as this information cannot be used to obtain authorization data.
+- It is advised not to pass around complex data objects when navigating, 
+  but instead pass the minimum necessary information, such as a unique identifier or other form of ID, 
+  as arguments when performing navigation actions. Complex objects should be stored as data in a single source of truth, such as the data layer.
+- Usually only the first screen in the flow/section should require arguments. Subsequent screens of the flow should rather obtain data 
+  from `Session` started by the first screen. 
+
+### Arguments of `Destinations`
+- ✔ Most of the time you should choose an object implementing `Parcelable` interface as an argument of the `Destination`, e.g.
+  ```kotlin
+  @Parcelize
+  data class CardArgument(val id: String) : Parcelable
+  ```
+- Using `Serializable` objects is a good choice only if you communicate with non-Android, non-Kotlin systems based on Java,
+  however even then you should rather convert models to `Parcelables` once entering the `ui` part of the application.
+- ⚠ Using primitives as arguments of `Destination` is generally discouraged as primitives are nameless
+  and usually do not provide enough context when used as generic parameters. Consider the following example:
+  ```kotlin
+  val AccountDetailsScreen: DestinationWithRequiredArgument<String>
+  ```
+  Can you guess what should be passed as argument? Account number in IBAN format? Internal account identifier? Customer identifier?
+  Compare this to:
+  ```kotlin
+  @Parcelize
+  data class AccountArgument(val id: String) : Parcelable
+
+  val AccountDetailsScreen: DestinationWithRequiredArgument<AccountArgument>
+  ```
+- You may reuse the same argument type across many destinations, e.g. probably many `Destinations` inside a feature module focused 
+  on a payment cards management require a card identifier which can be provided with:
+  ```kotlin
+  @Parcelize
+  data class CardArgument(val id: String) : Parcelable
+  ```
+  You may declare such argument in the main navigation file of the module or in a file shared by navigation and ui layer of the module
+  if you want to reuse the same argument in composables.
+- If you need to provide multiple arguments to a `Destination` you may simply use a `data class`:
+  ```kotlin
+  @Parcelize
+  data class AccountArgument(
+    val accountId: String,
+    val accountName: String,
+    val accountLast4Digits: String 
+  ) : Parcelable
+  ```
+
+### Arguments of screens/`Composables`
+- 99% of the time the argument of screen/`Composable` should be passed to view model directly:
+  ```kotlin
+  @Composable
+  fun CardDetails(
+    cardId: String,
+    viewModel: MviViewModel<CardDetailsViewState, ViewEvent, NavigationEffect, ViewEffect> = koinViewModel<CardDetailsViewModel> { parametersOf(cardId) }
+  )
+  ```
+- In case of `Composables` (unlike the `Destinations`) using primitive types as arguments is perfectly fine as the name
+  of the argument provides necessary context:
+  ```kotlin
+  @Composable
+  internal fun CardDetails(
+    cardId: String,
+    ...
+  )
+  ```
+- You may use the same argument type for both `Composables` and `Destinations` especially if they are defined in the same feature module:
+  ```kotlin
+  @Parcelize
+  data class CardArgument(val id: String) : Parcelable  
+  
+  ...
+  
+  val CardDetailsSection: DestinationWithRequiredArgument<CardArgument>  
+  
+  ...
+  
+  @Composable
+  internal fun CardDetails(
+    card: CardArgument,
+    viewModel: MviViewModel<CardDetailsViewState, ViewEvent, NavigationEffect, ViewEffect> = koinViewModel<CardDetailsViewModel> { parametersOf(card.id) }
+    ...
+  )
+  ```
