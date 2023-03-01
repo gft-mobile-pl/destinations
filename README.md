@@ -147,7 +147,7 @@ private val IntroductionDestination = Destination.withArgument<EditPasscodeArgum
 navigation(
   destination = EditPasscodeDestination,
   startDestination = IntroductionDestination,
-  defaultArgument = EditPasscodeMode.DEFINE // default value defined for the whole graph
+  defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE) // default value defined for the whole graph
 ) {
   composable(IntroductionDestination) { arg -> // non-null argument
     Introdcution(mode = arg.mode)
@@ -173,7 +173,7 @@ navigation(
 ) {
   composable(
     destination = IntroductionDestination,
-    defaultArgument = EditPasscodeMode.DEFINE // default value defined for a particular screen
+    defaultArgument = EditPasscodeArgument(EditPasscodeMode.DEFINE) // default value defined for the particular screen
   ) { arg -> // non-null argument
     Introdcution(mode = arg.mode)
   }
