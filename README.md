@@ -25,9 +25,9 @@ when compared to `xml` based navigation.
 | Reflection used                                   | ✔ No.                                                                                                                                    | ✔ No.                                                                                                                                      |
 | Amount of boilerplate                             | ✔ Minimalistic API.                                                                                                                      | ❌ A lot of boilreplate is required to define and use arguments.                                                                            |
 
-## Usage
+# Usage
 
-### Defining `Destinations`
+## Defining `Destinations`
 
 `Destination` represents a screen or a section of an application a user can navigate to. Each `Destination` servers a role of both 
 an identifier of a navigation graph's node and screen's/section's argument definition.
@@ -63,13 +63,13 @@ There are three types od `Desintations`:
   ```
   > ℹ Check Best Practices section for examples. 
   
-### Embedding screens and graphs
+## Embedding screens and graphs
 You may embed the same set of items as with `routes` using the following overloaded methods:
 - `NavGraphBuilder.composable` to embed screens
 - `NavGraphBuilder.navigation` to embed sub-graphs
 - `NavGraphBuilder.dialog` to embed dialogs
 
-###### Composables
+### Composables
 
 `Destination` without argument:
 ```kotlin
@@ -117,7 +117,7 @@ composable(
 }
 ```
 
-###### Dialogs
+### Dialogs
 
 Embedding `dialogs` is the same as embedding `composables`. The only difference is additional parameter `dialogProperties` 
 which you may use to define dialog behaviour.
@@ -132,7 +132,7 @@ Refer to the official documentation for more details: https://developer.android.
     }
 ```
 
-###### Subgraphs
+### Subgraphs
 
 Use `NavGraphBuilder.navigation` method to embed graph withing other graph. 
 
@@ -211,7 +211,7 @@ The following table presents all possible redirections from `destination` to `st
 > ℹ Default value may be defined for the whole graph or for a particular `startDestination`. If you are experimenting with the `startDestination` a lot
 > a the moment it may be easier to define the default value in `navigation` so you don't have to repeat it for each screen just because that screen might serve a role of a `startDestination` at some point.
 
-### Displaying the nav-graph
+## Displaying the nav-graph
 
 You need to use `com.gft.destinations.NavHost` to display the nav-graph. This is just an extended version of `androidx.navigation.compose.NavHost`
 which supports `Destinations` in addition to `routes`.
