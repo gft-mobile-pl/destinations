@@ -15,18 +15,19 @@ import com.gft.example.composenavigation.login.ui.navigation.LogoutPromptSection
 import com.gft.example.composenavigation.login.ui.navigation.logoutPromptSection
 
 val LoggedInSectionDestination = Destination.withoutArgument()
-private val HomeScreenDestination = Destination.withoutArgument()
 
 fun NavGraphBuilder.loggedInSection(
     onNavigateToNextAfterLogout: () -> Unit,
     navController: NavHostController
 ) {
+    val homeScreenDestination = Destination.withoutArgument()
+
     navigation(
         destination = LoggedInSectionDestination,
-        startDestination = HomeScreenDestination
+        startDestination = homeScreenDestination
     ) {
         homeScreenSection(
-            sectionDestination = HomeScreenDestination,
+            sectionDestination = homeScreenDestination,
             onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination),
             onNavigateBack = redirect(navController, LogoutPromptSectionDestination),
 

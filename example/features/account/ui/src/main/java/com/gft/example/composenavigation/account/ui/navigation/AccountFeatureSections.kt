@@ -19,16 +19,16 @@ import com.gft.example.composenavigation.account.ui.screens.widget.AccountFeatur
  * - AccountFeatureWidget.
  */
 
+val AccountSummaryDestination = Destination.withoutArgument()
+val AccountDetailsDestination = Destination.withoutArgument()
 fun NavGraphBuilder.accountFeatureSections(navController: NavController) {
-    accountSummarySection(navController)
-    accountDetailsSection(navController)
+    accountSummarySection(navController, AccountSummaryDestination)
+    accountDetailsSection(navController, AccountDetailsDestination)
 }
 
 /**
  * Account summary section.
  */
-val AccountSummaryDestination = Destination.withoutArgument()
-internal fun NavGraphBuilder.accountSummarySection(navController: NavController) = accountSummarySection(navController, AccountSummaryDestination)
 fun NavGraphBuilder.accountSummarySection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument
@@ -43,9 +43,7 @@ fun NavGraphBuilder.accountSummarySection(
 /**
  * Account details section.
  */
-val AccountDetailsDestination = Destination.withoutArgument()
-internal fun NavGraphBuilder.accountDetailsSection(navController: NavController) = accountDetailsSection(navController, AccountDetailsDestination)
-fun NavGraphBuilder.accountDetailsSection(
+internal fun NavGraphBuilder.accountDetailsSection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument
 ) {

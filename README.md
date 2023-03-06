@@ -425,7 +425,7 @@ Compose.
 
 ## Screens
 
-**Screen** is a view that is constructed and displayed by the `NavHost`. It could be a `@Composable` (in Compose graph) or a `Fragment` (in xml based graph).
+**Screen** is any view which is constructed and displayed directly by the `NavHost`. It could be a `@Composable` (in Compose graph) or a `Fragment` (in xml based graph).
 In the context of **'Destinations library'** the screen is the view of a `Destination`.
 
 In `Compose`:
@@ -452,7 +452,275 @@ In `Compose`:
 - You may pass (and probably have to pass) the `NavController` to view factories (check the `WidgetsFactory` in the sample project).
 - Most of the screens should be declared as `internal`. Other modules should deal with **Sections** rather than with the screens.
   
+## Sections
 
+**Section** is a mixed set of **Screens** (sometimes only one) and navigation graphs which are logically connected. 
+In technical terms it is just an extension method of `NavGraphBuilder` which adds composables, dialogs, graphs and other sections to the graph.
 
+At first sections may remind sub-graphs, but:
+- Sections add items to the graph, but unlike sub-graphs don't encapsulate them. 
+  Nevertheless a section may encapsulate any number of `Destinations` which makes referenced screens unreachable from the outside of the section.  
+- Even though sections are called in a hierarchical manner during graph creation, 
+  the added items (screens, graphs) may be placed on the same level of the graph.
+- Section may not have a `Destination` assigned - this usually means that this section's only role is just adding "public" items to the graph.
+- Section is just a graph builder. There is no notion of a section once the graph is built. 
+  Whenever you navigate to a `Destination` which points to a section you navigate to some screen or graph added by the section.
 
+Distributing the screens and graphs across the sections is not a trivial tasks. 
+This is usually a good idea to start designing sections on the feature-module level.
 
+### Module level sections
+
+Creating sections on a module level is a multi-step process. First, try to identify standalone journeys (interaction flows) which do not depend on other journeys.
+If there are no such journeys choose the one with the least amount of dependencies and leave some `TODO()`.
+Once the first pack of journeys is complete, search for the journeys which depend on the journeys already created.
+This is also the time you replaces `TODO()s` with references.
+In the end create a special section which adds all the public sections of the module.
+
+#### Journey sections
+
+Typical standalone journey's section may look like this:
+```kotlin
+fun NavGraphBuilder.cancelCardSection(
+  navController: NavController,
+  onNavigateToNextAfterCardCancelled: () -> Unit,
+  sectionDestination: DestinationWithRequiredArgument<CardArgument>
+) {
+  val cancelCardWarningDestination = Destination.withArgument<CardArgument>()
+  val cancelCardConfirmationDestination = Destination.withArgument<CardArgument>()
+
+  navigation(
+    destination = sectionDestination,
+    startDestination = cancelCardWarningDestination
+  ) {
+    composable(cancelCardWarningDestination) { arg ->
+      CardCancellationWarning(
+        card = arg,
+        onNavigateToConfirmation = redirect(
+          navController,
+          cancelCardConfirmationDestination
+        ) // You should rather use Session instead of re-passing card argument, but this example focuses on navigation only.
+      )
+    }
+
+    composable(cancelCardConfirmationDestination) { arg ->
+      CardCancellationConfirmation(
+        card = arg,
+        onNavigateToNextAfterCardCancelled = onNavigateToNextAfterCardCancelled,
+        onNavigateToNextAfterCardCancellationAborted = { navController.popBackStack(sectionDestination, true) },
+      )
+    }
+  }
+}
+```
+
+- The visibility of the section should be:
+  - `public` if the section is supposed to be **directly embedded** within sections defined in other module.
+    > 💡 A section is **directly embedded** when it is a direct (first-level) child of other section. Section is **embedded indirectly**
+         when it is a child of other section that is embedded.
+  - `internal` if the section is supposed to be **embedded** only within the sections defined in the same module.
+    > 💡 It still possible to navigate to `internal` section from a different module if a `public` `Destination` is assigned to it in the enclosing graph.
+  - `private` if the section is supposed to be embedded only within the sections defined in the same file.
+- You should not assign any specific `Destiantion` while declaring a session - you should expose a `sectionDestination` parameter instead.
+  Thanks to this you will be able to embed such session privately into another section (this will be explained in more details in the next chapter).  
+- Most of the time a section should not expose the screens/sub-sections it embeds. It is enough to use locally defined  `Destinations` while embedding screens/sub-sections.
+- Section may (but doesn't have to!) embrace all the screens/sub-sections within a single `navigation` graph. It has several advantages:
+  - If you use any utility which prints the current navigation graph you will a get nice hierarchical representation of a navigation
+    instead of flat list.
+  - You may use any `Destination` you want for the first screen of the session. The `sectionDestination` will be assigned to the root `navigation` item.
+    If you omit the `navigation` graph you would have to assign the `sectionDestination` to the first screen of the section.
+  - You may easily experiment with a first screen of the section using the `startDestination` parameter instead of reassigning `Destinations` of the screens' back and forth.  
+- The use of `NavController` within the section should be limited to three types of actions only:
+  - Navigating to **screens/sub-sections** that are **embedded directly** in this section.
+  - Navigating to other **sections** (not screens, not graphs) which are defined within the same feature module.
+  - Collapsing the session when the journey is terminated (e.g. completed, aborted)
+    > 💡 You may collapse a section with `navController.popBackStack(sectionDestination, true)`.
+- You should use callbacks to request navigation to sections defined in other modules.
+- There are two ways the journey may end:
+  - the whole section collapses (this is generally the most common case),
+  - a navigation callback is requested, e.g. check `onNavigateToNextAfterCardCancelled: () -> Unit`.
+
+#### Embedding section within other section
+
+Sometimes you need to control where a user is brought to after some journey is terminated, e.g.
+1. User is on **Card details** screen.
+2. User clicks **Cancel card** button.
+3. A **Cancel card** journey (section) is started.
+4. Journey completes successfully and card is cancelled.
+
+At this point we need to remove the **Cancel card** journey from the backstack for sure, 
+but at the same time we cannot go back to the **Card details** screen as the card is no longer valid. 
+We should rather collapse the **Card details** section as well 
+and show any screen that was shown before the user entered "**Card details**" section.
+
+In order to implement such navigation both **Cancel card** journey and **Card details** section need to "cooperate":
+1. **Cancel card** need to expose a callback invoked when card is cancelled:
+    ```kotlin
+    fun NavGraphBuilder.cancelCardSection(
+        navController: NavController,
+        onNavigateToNextAfterCardCancelled: () -> Unit, // <--- Callback invoked when a card is cancelled
+        sectionDestination: DestinationWithRequiredArgument<CardArgument>
+    ) { ... }
+    ```
+2. **Card details** section need to handle the callback:
+    ```kotlin
+    internal fun NavGraphBuilder.cardDetailsSection(
+        navController: NavController,
+        sectionDestination: DestinationWithRequiredArgument<CardArgument>,
+        onNavigateToAccountDetails: () -> Unit
+    ) {
+        val cardDetailsDestination = Destination.withArgument<CardArgument>()
+        val cancelCardDestination = Destination.withArgument<CardArgument>()
+    
+        navigation(
+            destination = sectionDestination,
+            startDestination = cardDetailsDestination
+        ) {
+            composable(cardDetailsDestination) { card ->
+                CardDetails(
+                    card = card,
+                    onNavigateToAccountDetails = onNavigateToAccountDetails,
+                    onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
+                    onNavigateToCancelCard = redirect(navController, cancelCardDestination)
+                )
+            }
+    
+            cancelCardSection( // <--- embedded section
+                navController = navController,
+                onNavigateToNextAfterCardCancelled = { 
+                    navController.popBackStack(destination = sectionDestination, inclusive = true) // <--- Collapse the 'Card details' section
+                },
+                sectionDestination = cancelCardDestination
+            )
+        }
+    }
+    ```
+> 💡 Note that we don't have to handle a case when a card cancelling procedure is aborted - the "Cancel card" journey may simply collapse when this happens. 
+
+#### Grouping module level sections together 
+
+A good practice is to create a single **grouping method** which embeds all the sections defined within the module:
+
+```kotlin
+internal val CardsSummarySectionDestination = Destination.withoutArgument()
+internal val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()
+internal val FreezeCardSectionDestination = Destination.withArgument<CardArgument>()
+
+fun NavGraphBuilder.cardFeatureSections(
+    navController: NavController,
+    onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
+    onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
+) {
+    cardsSummarySection(navController, CardsSummarySectionDestination, onNavigateToAccountSummary, onNavigateToAccountDetails)
+    cardDetailsSection(navController, CardDetailsSectionDestination, onNavigateToAccountDetails)
+    freezeCardSection(navController, FreezeCardSectionDestination)
+}
+```
+
+- Such method serves several purposes:
+  - It adds both `public` and `internal` sections to the graph.  
+  - It assigns `Destination` to each added section.
+  - It makes the construction of the application's graph simpler - it is enough for the main application module to call this single
+  method to embed all the sections provided by the feature module.
+  - Gathers callbacks used for cross-module navigation. 
+- Consider the correct visibility of the `Destination` assigned to each section:
+  - Use `public` if other modules may request navigation to the given section. 
+    > 💡 It is always the app module that wires cross-module navigation. Each feature module may only request a navigation with the use of callback. Feature modules should never have access to `Destinations` defined by other feature modules.
+  - Use `internal` if only the sections defined within the same module may navigate to the given section.
+  - Use `private` if only the sections defined within the same file navigate to the given section.
+  > ⚠ <u>Not all sections defined in the module should be embedded by the grouping method</u>.<br /> 
+  > Some sections are supposed to be always embedded within a local context and you can't navigate to them
+  > using globally accessible `Destination`. An example would be `cancelCardSection` presented in the previous chapter.<br/>
+  > 
+  > Usually it is easy to spot such section as most of them provide a callback which is invoked when such 
+  > section is terminated and it is impossible to provide implementation of this callback in the **grouping method**.
+  > The other clue would be if a section is embedded many times. 
+  
+
+#### Meta sections
+
+A section that embeds other sections, but not screens, graphs etc. is called **meta section**.
+Such sections help to keep the structure of the navigation graph more readable 
+by encapsulating sections used only in some part of the application. 
+In fact the **grouping methods** described in the previous chapter are **meta sections**.
+
+A good example of a meta section is `LoggedInSection` that you may find in the sample app:
+```kotlin
+fun NavGraphBuilder.loggedInSection(
+    onNavigateToNextAfterLogout: () -> Unit,
+    navController: NavHostController
+) {
+    navigation(
+        destination = LoggedInSectionDestination,
+        startDestination = HomeScreenDestination
+    ) {
+        homeScreenSection(
+            sectionDestination = HomeScreenDestination,
+            onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination),
+            onNavigateBack = redirect(navController, LogoutPromptSectionDestination),
+
+            // This callback is added just to demonstrate a very rare case of unnamed/context-less navigation.
+            // (Generally such navigation should be avoided).
+            onNavigationRequest = { request ->
+                when (request) {
+                    NavigateToAccountDetailsRequest -> navController.navigate(AccountDetailsDestination)
+                }
+            },
+
+            navController = navController
+        )
+
+        accountFeatureSections(navController)
+
+        cardFeatureSections(
+            onNavigateToAccountSummary = redirect(navController, AccountSummaryDestination),
+            onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination),
+            navController = navController
+        )
+
+        logoutPromptSection(
+            onNavigateToNextAfterLogout = onNavigateToNextAfterLogout,
+            navController = navController
+        )
+    }
+}
+```
+> ⚠ Every rule that applies to normal **sections** applies to **meta sections** as well.<br />
+> 
+> Nevertheless <u>you should refrain from navigating to sections that are not direct or indirect
+> children of the current **meta section**</u>. You should use callbacks instead, e.g. examine the `onNavigateToNextAfterLogout` callback in the example above.
+
+The top-most **meta section** is the `NavHost` declaration, e.g.
+```kotlin
+    val welcomeScreenDestination = Destination.withoutArgument()
+
+    NavHost(
+        modifier = modifier,
+        navController = navController,
+        startDestination = welcomeScreenDestination
+    ) {
+        composable(welcomeScreenDestination) {
+            WelcomeScreen(
+                onNavigateToNext = redirect(navController, LoginSectionDestination)
+            )
+        }
+
+        loginSection(
+            onNavigateToNextAfterSuccessfulLogin = redirect(navController, LoggedInSectionDestination, navOptions {
+                popUpTo(welcomeScreenDestination.id) { inclusive = false }
+            }),
+            navController = navController
+        )
+
+        loggedInSection(
+            onNavigateToNextAfterLogout = {
+                navController.popBackStack(destination = welcomeScreenDestination, inclusive = false)
+            },
+            navController = navController
+        )
+    }
+```
+
+#### Pseudo sections
+
+TBD

@@ -36,26 +36,26 @@ import kotlinx.parcelize.Parcelize
 @Parcelize
 data class CardArgument(val id: String) : Parcelable
 
+/**
+ * All module's sections
+ */
+internal val CardsSummarySectionDestination = Destination.withoutArgument()
+internal val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()
+internal val FreezeCardSectionDestination = Destination.withArgument<CardArgument>()
+
 fun NavGraphBuilder.cardFeatureSections(
     navController: NavController,
     onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
 ) {
-    cardsSummarySection(navController, onNavigateToAccountSummary, onNavigateToAccountDetails)
-    cardDetailsSection(navController, onNavigateToAccountDetails)
-    freezeCardSection(navController)
+    cardsSummarySection(navController, CardsSummarySectionDestination, onNavigateToAccountSummary, onNavigateToAccountDetails)
+    cardDetailsSection(navController, CardDetailsSectionDestination, onNavigateToAccountDetails)
+    freezeCardSection(navController, FreezeCardSectionDestination)
 }
 
 /**
  * Cards summary section (aka cards list)
  */
-val CardsSummarySectionDestination = Destination.withoutArgument()
-internal fun NavGraphBuilder.cardsSummarySection(
-    navController: NavController,
-    onNavigateToAccountSummary: () -> Unit,
-    onNavigateToAccountDetails: () -> Unit
-) = cardsSummarySection(navController, CardsSummarySectionDestination, onNavigateToAccountSummary, onNavigateToAccountDetails)
-
 fun NavGraphBuilder.cardsSummarySection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument,
@@ -75,14 +75,7 @@ fun NavGraphBuilder.cardsSummarySection(
 /**
  * Card details section.
  */
-val CardDetailsSectionDestination = Destination.withArgument<CardArgument>()
-
 internal fun NavGraphBuilder.cardDetailsSection(
-    navController: NavController,
-    onNavigateToAccountDetails: () -> Unit
-) = cardDetailsSection(navController, CardDetailsSectionDestination, onNavigateToAccountDetails)
-
-fun NavGraphBuilder.cardDetailsSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>,
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
@@ -116,10 +109,7 @@ fun NavGraphBuilder.cardDetailsSection(
 /**
  * Freeze card section
  */
-val FreezeCardSectionDestination = Destination.withArgument<CardArgument>()
-internal fun NavGraphBuilder.freezeCardSection(navController: NavController) = freezeCardSection(navController, FreezeCardSectionDestination)
-
-fun NavGraphBuilder.freezeCardSection(
+internal fun NavGraphBuilder.freezeCardSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>
 ) {
