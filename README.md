@@ -199,7 +199,7 @@ navigation(
 }
 ```
 
-The following table presents all possible redirections from `destination` to `startDestination`:
+The following table presents all valid combinations of `destination` and `startDestination`:
 
 | Graph's `destination`           | `defaultArgument` in `navigation` | `startDestination`              | `defaultArgument` in `composable` |
 |---------------------------------|:---------------------------------:|---------------------------------|:---------------------------------:|
@@ -319,7 +319,7 @@ Compose.
   ```
 
 ### Arguments of screens/`Composables`
-- 99% of the time the argument of screen/`Composable` should be passed to view model directly:
+- 99% of the time the argument of a screen/`Composable` should be passed to view model directly:
   ```kotlin
   @Composable
   fun CardDetails(
@@ -354,3 +354,4 @@ Compose.
     ...
   )
   ```
+  This may also pay off during redirection - you won't have to wrap/unwrap primitives into/out of `Parcelable` each time you pass argument from a view to navigation layer and vice versa.
