@@ -300,20 +300,20 @@ With the `redirect` methods you may also:
 
 The table below presents all valid redirections:
 
-| Callback                | Destination type                     | Argument | Usage                                                                                                                       |
-|-------------------------|--------------------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------|
-| <pre>() -> Unit</pre>   | `DestinationWithoutArgument`         |    -     | `redirect(navController, destination)`                                                                                      |
-| <pre>(T?) -> Unit</pre> | `DestinationWithoutArgument`         |    -     | `redirectIgnoreArgument(navController, destination)`                                                                        |
-| <pre>(T) -> Unit</pre>  | `DestinationWithoutArgument`         |    -     | `redirectIgnoreArgument(navController, destination)`                                                                        |
-| <pre>() -> Unit</pre>   | `DestinationWithOptionalArgument<T>` |    T?    | `redirectWithArgument(navController, destination, T?)`<br />e.g. `= redirectWithArgument(navController, destination, null)` |
-| <pre>(T?) -> Unit</pre> | `DestinationWithOptionalArgument<T>` |    T?    | `redirect(navController, destination)`                                                                                      || `(T) -> Unit`         |           T            | `DestinationWithOptionalArgument<T>` |       T (optional)        | `= redirect(navController, destination)`                                                                                   |
-| <pre>(T?) -> Unit</pre> | `DestinationWithOptionalArgument<U>` |    U?    | `redirect(navController, destination) { T? -> U? }`                                                                         |
-| <pre>(T) -> Unit</pre>  | `DestinationWithOptionalArgument<U>` |    U?    | `redirect(navController, destination) { T -> U? }`                                                                          |
-| <pre>() -> Unit</pre>   | `DestinationWithRequiredArgument<T>` |    T     | `redirectWithArgument(navController, destination, T)`                                                                       |
-| <pre>(T?) -> Unit</pre> | `DestinationWithRequiredArgument<T>` |    T     | `redirect(navController, destination) { T? -> T }`                                                                          |
-| <pre>(T) -> Unit</pre>  | `DestinationWithRequiredArgument<T>` |    T     | `redirect(navController, destination)`                                                                                      |
-| <pre>(T?) -> Unit</pre> | `DestinationWithRequiredArgument<U>` |    U     | `redirect(navController, destination) { T? -> U }`                                                                          |
-| <pre>(T) -> Unit</pre>  | `DestinationWithRequiredArgument<U>` |    U     | `redirect(navController, destination) { T -> U }`                                                                           |
+| Callback                | Destination type            | Argument | Usage                                                                                                                       |
+|-------------------------|-----------------------------|:--------:|-----------------------------------------------------------------------------------------------------------------------------|
+| <pre>() -> Unit</pre>   | `withoutArgument()`         |    -     | `redirect(navController, destination)`                                                                                      |
+| <pre>(T?) -> Unit</pre> | `withoutArgument()`         |    -     | `redirectIgnoreArgument(navController, destination)`                                                                        |
+| <pre>(T) -> Unit</pre>  | `withoutArgument()`         |    -     | `redirectIgnoreArgument(navController, destination)`                                                                        |
+| <pre>() -> Unit</pre>   | `withOptionalArgument<T>()` |    T?    | `redirectWithArgument(navController, destination, T?)`<br />e.g. `= redirectWithArgument(navController, destination, null)` |
+| <pre>(T?) -> Unit</pre> | `withOptionalArgument<T>()` |    T?    | `redirect(navController, destination)`                                                                                      || `(T) -> Unit`         |           T            | `DestinationWithOptionalArgument<T>` |       T (optional)        | `= redirect(navController, destination)`                                                                                   |
+| <pre>(T?) -> Unit</pre> | `withOptionalArgument<U>()` |    U?    | `redirect(navController, destination) { T? -> U? }`                                                                         |
+| <pre>(T) -> Unit</pre>  | `withOptionalArgument<U>()` |    U?    | `redirect(navController, destination) { T -> U? }`                                                                          |
+| <pre>() -> Unit</pre>   | `withArgument<T>()`         |    T     | `redirectWithArgument(navController, destination, T)`                                                                       |
+| <pre>(T?) -> Unit</pre> | `withArgument<T>()`         |    T     | `redirect(navController, destination) { T? -> T }`                                                                          |
+| <pre>(T) -> Unit</pre>  | `withArgument<T>()`         |    T     | `redirect(navController, destination)`                                                                                      |
+| <pre>(T?) -> Unit</pre> | `withArgument<U>()`         |    U     | `redirect(navController, destination) { T? -> U }`                                                                          |
+| <pre>(T) -> Unit</pre>  | `withArgument<U>()`         |    U     | `redirect(navController, destination) { T -> U }`                                                                           |
 
 If at some point you need another type of redirection it probably means that you would like to "hack a system", write a temporary code or try to test something.
 Remember that you still got the option to NOT use `redirections` and implement any navigation callback directly (check the beginning of this section).
