@@ -203,20 +203,20 @@ The following table presents all valid combinations of `destination` and `startD
 
 | Graph's `destination`           | `defaultArgument` in `navigation` | `startDestination`              | `defaultArgument` in `composable` |
 |---------------------------------|:---------------------------------:|---------------------------------|:---------------------------------:|
-| DestinationWithoutArgument      |                 ✖                 | DestinationWithoutArgument      |                 ✖                 |
-| DestinationWithoutArgument      |                 ✖                 | DestinationWithOptionalArgument |                 ✖                 |
-| DestinationWithoutArgument      |                 ✔                 | DestinationWithOptionalArgument |                 ✖                 |
-| DestinationWithoutArgument      |                 ✖                 | DestinationWithOptionalArgument |                 ✔                 |
-| DestinationWithoutArgument      |                 ✔                 | DestinationWithRequiredArgument |                 ✖                 |
-| DestinationWithOptionalArgument |                 ✖                 | DestinationWithoutArgument      |                 ✖                 |
-| DestinationWithOptionalArgument |                 ✖                 | DestinationWithOptionalArgument |                 ✖                 |
-| DestinationWithOptionalArgument |                 ✔                 | DestinationWithOptionalArgument |                 ✖                 |
-| DestinationWithOptionalArgument |                 ✖                 | DestinationWithOptionalArgument |                 ✔                 |
+| DestinationWithoutArgument      |                 ➖                 | DestinationWithoutArgument      |                 ➖                 |
+| DestinationWithoutArgument      |                 ➖                 | DestinationWithOptionalArgument |                 ➖                 |
+| DestinationWithoutArgument      |                 ➖                 | DestinationWithOptionalArgument |                 ➖                 |
+| DestinationWithoutArgument      |                 ➖                 | DestinationWithOptionalArgument |                 ✔                 |
+| DestinationWithoutArgument      |                 ✔                 | DestinationWithRequiredArgument |                 ➖                 |
+| DestinationWithOptionalArgument |                 ➖                 | DestinationWithoutArgument      |                 ➖                 |
+| DestinationWithOptionalArgument |                 ➖                 | DestinationWithOptionalArgument |                 ➖                 |
+| DestinationWithOptionalArgument |                 ✔                 | DestinationWithOptionalArgument |                 ➖                 |
+| DestinationWithOptionalArgument |                 ➖                 | DestinationWithOptionalArgument |                 ✔                 |
 | DestinationWithOptionalArgument |                 ✔                 | DestinationWithOptionalArgument |        ✔ (will be ignored)        |
-| DestinationWithRequiredArgument |                 ✖                 | DestinationWithoutArgument      |                 ✖                 |
-| DestinationWithRequiredArgument |                 ✖                 | DestinationWithOptionalArgument |                 ✖                 |
-| DestinationWithRequiredArgument |                 ✖                 | DestinationWithOptionalArgument |        ✔ (will be ignored)        |
-| DestinationWithRequiredArgument |                 ✖                 | DestinationWithRequiredArgument |                 ✖                 |
+| DestinationWithRequiredArgument |                 ➖                 | DestinationWithoutArgument      |                 ➖                 |
+| DestinationWithRequiredArgument |                 ➖                 | DestinationWithOptionalArgument |                 ➖                 |
+| DestinationWithRequiredArgument |                 ➖                 | DestinationWithOptionalArgument |        ✔ (will be ignored)        |
+| DestinationWithRequiredArgument |                 ➖                 | DestinationWithRequiredArgument |                 ➖                 |
 
 > ⚠ Note: The types of the `destination` and `startDestination` arguments must match!
 
@@ -251,6 +251,73 @@ NavHost(
 }
 
 ```
+
+## Redirections
+
+Usually screens/`Composables` use callbacks to request navigation, e.g.
+```kotlin
+@Composable
+internal fun CardDetails(
+    modifier: Modifier = Modifier,
+    card: CardArgument,
+    onNavigateToAccountDetails: () -> Unit,
+    onNavigateToFreezeCard: (CardArgument) -> Unit,
+    onNavigateToCancelCard: (CardArgument) -> Unit
+)
+```
+Then you need to provide implementations of these callbacks, e.g.
+```kotlin
+composable(cardDetailsDestination) { card ->
+    CardDetails(
+        card = card,
+        onNavigateToAccountDetails = onNavigateToAccountDetails,
+        onNavigateToFreezeCard = {arg ->
+            navController.navigate(FreezeCardSectionDestination, arg)
+        },
+        onNavigateToCancelCard = { arg ->
+            navController.navigate(cancelCardDestination, arg)    
+        }
+    )
+}
+```
+However, you may achieve the same result writing less code with the help of `redirect` methods:
+```kotlin
+composable(cardDetailsDestination) { card ->
+    CardDetails(
+        card = card,
+        onNavigateToAccountDetails = onNavigateToAccountDetails,
+        onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
+        onNavigateToCancelCard = redirect(navController, cancelCardDestination)
+    )
+}
+```
+
+With the `redirect` methods you may also:
+- ignore any incoming argument, e.g. when navigating to `DestinationWithoutArgument` from a callback that accepts an argument (`(T) -> Unit`)
+- provide a default argument, e.g. when navigating from `() -> Unit` callback to `DestinationWithOptionalArgument<T>` or `DestinationWithRequiredArgument<T>`
+- map an argument (e.g. when navigating from `(String) -> Unit` callback to `DestinationWithRequiredArgument<CardArgument>`)
+- provide custom `NavOptions`
+
+The table below presents all valid redirections:
+
+| Callback       | Callback<br />argument | Destination type                     | Destination<br />argument | Usage                                                                                                                         |
+|----------------|:----------------------:|--------------------------------------|:-------------------------:|-------------------------------------------------------------------------------------------------------------------------------|
+| `() -> Unit`   |           -            | `DestinationWithoutArgument`         |             -             | `= redirect(navController, destination)`                                                                                      |
+| `(T?) -> Unit` |           T?           | `DestinationWithoutArgument`         |             -             | `= redirectIgnoreArgument(navController, destination)`                                                                        |
+| `(T) -> Unit`  |           T            | `DestinationWithoutArgument`         |             -             | `= redirectIgnoreArgument(navController, destination)`                                                                        |
+| `() -> Unit`   |           -            | `DestinationWithOptionalArgument<T>` |       T (optional)        | `= redirectWithArgument(navController, destination, T?)`<br />e.g. `= redirectWithArgument(navController, destination, null)` |
+| `(T?) -> Unit` |           T?           | `DestinationWithOptionalArgument<T>` |       T (optional)        | `= redirect(navController, destination)`                                                                                      |
+| `(T) -> Unit`  |           T            | `DestinationWithOptionalArgument<T>` |       T (optional)        | `= redirect(navController, destination)`                                                                                      |
+| `(T?) -> Unit` |           T?           | `DestinationWithOptionalArgument<U>` |       U (optional)        | `= redirect(navController, destination) { T? -> U? }`                                                                         |
+| `(T) -> Unit`  |           T            | `DestinationWithOptionalArgument<U>` |       U (optional)        | `= redirect(navController, destination) { T -> U? }`                                                                          |
+| `() -> Unit`   |           -            | `DestinationWithRequiredArgument<T>` |             T             | `= redirectWithArgument(navController, destination, T)`                                                                       |
+| `(T?) -> Unit` |           T?           | `DestinationWithRequiredArgument<T>` |             T             | `= redirect(navController, destination) { T? -> T }`                                                                          |
+| `(T) -> Unit`  |           T            | `DestinationWithRequiredArgument<T>` |             T             | `= redirect(navController, destination)`                                                                                      |
+| `(T?) -> Unit` |           T            | `DestinationWithRequiredArgument<U>` |             U             | `= redirect(navController, destination) { T? -> U }`                                                                          |
+| `(T) -> Unit`  |           T            | `DestinationWithRequiredArgument<U>` |             U             | `= redirect(navController, destination) { T -> U }`                                                                           |
+
+If at some point you need another type of redirection it probably means that you would like to "hack a system", write a temporary code or try to test something.
+Remember that you still got the option to NOT use `redirections` and implement any navigation callback directly (check the beginning of this section).
 
 # Best practices
 
