@@ -394,7 +394,7 @@ Compose.
     viewModel: MviViewModel<CardDetailsViewState, ViewEvent, NavigationEffect, ViewEffect> = koinViewModel<CardDetailsViewModel> { parametersOf(cardId) }
   )
   ```
-- In case of `Composables` (unlike the `Destinations`) using primitive types as arguments is perfectly fine as the name
+- In case of `Composables` (unlike the `Destinations`) using primitive types as arguments is fine as the name
   of the argument provides necessary context:
   ```kotlin
   @Composable
@@ -422,3 +422,37 @@ Compose.
   )
   ```
   This may also pay off during redirection - you won't have to wrap/unwrap primitives into/out of `Parcelable` each time you pass argument from a view to navigation layer and vice versa.
+
+## Screens
+
+**Screen** is a view that is constructed and displayed by the `NavHost`. It could be a `@Composable` (in Compose graph) or a `Fragment` (in xml based graph).
+In the context of **'Destinations library'** the screen is the view of a `Destination`.
+
+In `Compose`:
+- Navigation should be requested with callbacks:
+  ```kotlin
+  @Composable
+  internal fun CardDetailsScreen(
+      modifier: Modifier = Modifier,
+      card: CardArgument,
+      onNavigateToAccountDetails: () -> Unit,
+      onNavigateToFreezeCard: (CardArgument) -> Unit,
+      onNavigateToCancelCard: (CardArgument) -> Unit
+  )
+  ```
+  > ⚠ Avoid using primitive types as arguments of the navigation callbacks. 
+  > Lambdas' arguments have no name and may be ambiguous for other developers.
+- Although primitive types can be used for screens' arguments, the `Parcelables` are still considered a better choice.
+  Reusing the same types of arguments as in the navigation layer may spare you arguments conversion.
+- `Destinations` should never be used as navigation callbacks' arguments. Screens should not be aware which navigation library is used.
+- You must never invoke `navController.navigate` from within the `Screen`.
+- Generally you should never pass the `NavController` or `NavHostController` to any `Screen`. Even if you use `Scaffold` 
+  with internal `NavHost` it is possible to extract `NavController` to navigation layer completely. 
+  Check the `HomeScreen` in the sample project for an example. The `Scaffold` section of this README covers more details as well.
+- You may pass (and probably have to pass) the `NavController` to view factories (check the `WidgetsFactory` in the sample project).
+- Most of the screens should be declared as `internal`. Other modules should deal with **Sections** rather than with the screens.
+  
+
+
+
+
