@@ -628,13 +628,14 @@ fun NavGraphBuilder.cardFeatureSections(
     > 💡 It is always the app module that wires cross-module navigation. Each feature module may only request a navigation with the use of callback. Feature modules should never have access to `Destinations` defined by other feature modules.
   - Use `internal` if only the sections defined within the same module may navigate to the given section.
   - Use `private` if only the sections defined within the same file navigate to the given section.
-  > ⚠ <u>Not all sections defined in the module should be embedded by the grouping method</u>.<br /> 
-  > Some sections are supposed to be always embedded within a local context and you can't navigate to them
-  > using globally accessible `Destination`. An example would be `cancelCardSection` presented in the previous chapter.<br/>
-  > 
-  > Usually it is easy to spot such section as most of them provide a callback which is invoked when such 
-  > section is terminated and it is impossible to provide implementation of this callback in the **grouping method**.
-  > The other clue would be if a section is embedded many times. 
+  
+> ⚠ <u>Not all sections defined in the module should be embedded by the grouping method</u>.<br /> 
+> Some sections are supposed to be always embedded within a local context and you can't navigate to them
+> using globally accessible `Destination`. An example would be `cancelCardSection` presented in the previous chapter.<br/>
+> 
+> Usually it is easy to spot such section as most of them provide a callback which is invoked when such 
+> section is terminated and it is impossible to provide implementation of this callback in the **grouping method**.
+> The other clue would be if a section is embedded many times. 
   
 
 #### Meta sections
