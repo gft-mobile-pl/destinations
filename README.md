@@ -440,8 +440,9 @@ In `Compose`:
       onNavigateToCancelCard: (CardArgument) -> Unit
   )
   ```
-  > ⚠ Avoid using primitive types as arguments of the navigation callbacks. 
-  > Lambdas' arguments have no name and may be ambiguous for other developers.
+  - ⚠ Avoid using primitive types as arguments of the navigation callbacks. Lambdas' arguments have no name and may be ambiguous for other developers.
+  - The name of the callback should suggest the target of the navigation.
+  - Generally each callback should handle navigation to a single section or screen. However, there **might** be one exception to this rule - check the **Conditional navigation** chapter for more details.
 - Although primitive types can be used for screens' arguments, the `Parcelables` are still considered a better choice.
   Reusing the same types of arguments as in the navigation layer may spare you arguments conversion.
 - `Destinations` should never be used as navigation callbacks' arguments. Screens should not be aware which navigation library is used.
@@ -722,6 +723,148 @@ The top-most **meta section** is the `NavHost` declaration, e.g.
     }
 ```
 
-#### Pseudo sections
+## Conditional navigation and pseudo-sections
 
-TBD
+Whenever a view requests navigation it simply invokes an appropriate callback exposed in its `@Composable` method.
+The callback is implemented on the navigation layer where it maps the request to a `Destination`. 
+The most important thing is that each callback handles navigation to one screen only.
+
+However, this approach might be quite inconvenient in one very specific case. Imagine the following application's structure:
+- There is a `LoggedInSection` which wires almost all other sections of the application.
+- The first section of the `LoggedInSection` is the `HomeScreenSection`
+- The first screen of the `HomeScreenSection` is `HomeScreen`
+- `HomeScreen` contains its own `NavHost` to display tabs. There are 3 tabs:
+  - `WidgetsScreen` which is dashboard that displays dynamic set of widgets.
+  - `AccountSummaryScreen`
+  - `PaymentCardsSummaryScreen`
+- The set of widgets displayed on the `WidgetsScreen` is resolved dynamically based on many rules.
+  Let's say the pool of the available widgets is 20 in size and we usually display 5 widgets at the time.
+  Once the set of widgets is established the `WidgetsFactory` is used to create the views of the widgets.
+  Each widget is defined in a different feature module and contains a few buttons. 
+  Each button requests navigation to a different section defined in the same feature module as the widget.  
+
+If we use the standard approach to navigation we would end up with something like this:
+- Each widget exposes a few callback methods in order to request navigation.
+- `WidgetsFactory` signature has to expose **a few dozens** of callbacks 
+  as it has to be able to pass all the navigation requests from all the widgets (even if they are not displayed!).
+- `HomeScreen` signature has to expose **a few dozens** of callbacks - it has to be able to pass all the navigation requests from `WidgetsFactory`.
+- `HomeScreenSection` signature has to expose **a few dozens** of callbacks - it has to be able to pass all the navigation requests from `HomeScreen`.
+
+> 💡 In fact you may shorten the list of intermediate screens/sections if you inject `WidgetsScreen` into the `HomeScreen`. 
+> You may check the sample app for a complete solution.
+
+You may guess that managing such `@Composables` tree would be a nightmare:
+- a signature of each `@Composable` would take a few dozens of lines,
+- adding/removing a widget would end up in changing many `@Composables`
+- adding/removing a button to/from a widget would end up in changing many `@Composables`.
+This problem is known as `property drilling` and in this case it is further exaggerated by the number of callbacks. 
+
+There are at least two solutions to this problem:
+- conditional navigation,
+- pseudo-sections.
+
+### Conditional navigation
+> ⚠ Using conditional navigation should be limited to the very specific cases when standard navigation approach is <u>extremely</u> inconvenient.
+
+1. Define navigation request parameter, e.g.
+   ```kotlin
+   data class NavigateToCardDetailsRequest(val card: CardArgument)
+   ```
+2. Expose navigation request in the view:
+   ```kotlin
+   @Composable
+   fun CardsFeatureWidget(
+     navController: NavController,
+     onNavigateToCardDetails: (NavigateToCardDetailsRequest) -> Unit
+   ) { ... }
+   ```
+3. Redirect all navigation requests to a single untyped navigation request on the higher level:
+   ```kotlin
+   object WidgetsFactory {
+     @Composable
+     fun CreateWidgets(
+       navController: NavController,
+       onNavigationRequest: (Any) -> Unit // <--- untyped navigation request
+     ) {
+       ...
+       CardsFeatureWidget(navController = navController, onNavigateToCardDetails = onNavigationRequest) // <--- redirection to untyped navigation request
+       ...
+     }
+   }
+   ```
+4. Pass the untyped navigation requests higher and higher in the composables tree:
+   ```kotlin
+   @Composable
+   fun WidgetsScreen(
+     onNavigationRequest: (Any) -> Unit,
+     navController: NavController,
+     modifier: Modifier = Modifier
+   ) {
+   
+     ... 
+   
+     WidgetsFactory.CreateWidgets(
+       navController = navController,
+       onNavigationRequest = onNavigationRequest
+     )
+   }
+   
+   etc.
+   ```
+5. Handle navigation requests on the navigation layer:
+   ```kotlin
+   onNavigationRequest = { request ->
+     when (request) {
+       ...
+       is NavigateToCardDetailsRequest -> navController.navigate(CardDetailsSectionDestination, request.card)
+       ...   
+     } 
+   }
+   ```
+
+### Pseudo-sections
+
+Some feature modules provide views (`@Composables`) that can be embedded directly into other views instead 
+of being added to the navigation graph as screens. A good example of such views are widgets.
+
+Usually these views request navigation only to the `Destinations` which are defined it the same module as the views are.
+There is a possibility to satisfy these navigation requests by wrapping the views in the **pseudo-sections**. 
+This special type of sections is intended to be embedded directly into views rather than into navigation graph.
+
+```kotlin
+@Composable
+fun CardsFeatureWidget( // <--- pseudo section!
+    navController: NavController
+) {
+    CardsFeatureWidget(
+        onNavigateToCardDetails = redirect(navController, CardDetailsSectionDestination), // <--- same feature navigation request
+    )
+}
+```
+> 💡 Note that you should not add the `Section` suffix to the name of the pseudo section.<br />
+> From the perspective of another modules it should be as indistinguishable from a "normal" view as possible.
+
+As you can see the pseudo-section satisfies all the navigation request of the `CardsFeatureWidget` view. 
+What is more, it can even navigate to `internal` `Destinations` (e.g. `CardDetailsSectionDestination`) as it is defined
+in the same module as target screens.
+
+Because pseudo-section is almost indistinguishable from a "normal" view it can be embedded directly into another view:
+```kotlin
+@Composable
+fun SomeContainer(
+    navController: NavController
+) {
+    ...
+    CardsFeatureWidget(navController = navController)
+    ...
+}
+```
+> 💡 This is a rare case when you need to pass the `NavController` to view. 
+> You may use dependency injection to remove the `navController` from the signature.
+
+
+### Should I use 'Conditional navigation' or 'Pseudo-sections'?
+
+
+
+## Scaffold (TBD)
