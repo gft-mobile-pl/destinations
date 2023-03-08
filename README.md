@@ -871,7 +871,9 @@ You may use both **pseudo-section** and **conditional navigation** if it is requ
 
 ## Scaffold 
 
-Please examine the sample application to find out how to use `Scaffold` properly with `Destinations`. Please notice that:
+Please examine the sample application to find out how to use `Scaffold` properly with `Destinations`.
+Pay special attention to `HomeScreen.kt` and `HomeScreenSection.kt`. 
+You may note that:
 - there is no need to pass `NavCotroller` to `Scaffold`
 - `Scaffold` may but doesn't have to use `NavHost` (although it is very common)
 - **all** the navigation code could be extracted from the `Scaffold` to the navigation layer.
