@@ -862,9 +862,54 @@ fun SomeContainer(
 > 💡 This is a rare case when you need to pass the `NavController` to view. 
 > You may use dependency injection to remove the `navController` from the signature.
 
-
 ### Should I use 'Conditional navigation' or 'Pseudo-sections'?
 
+- Use the **pseudo-section** if the view is defined in the same feature-module as the screens the view request navigation to.
+- Use the **conditional navigation** if the view requests navigation to the screens defined in the different modules than the view.
+
+You may use both **pseudo-section** and **conditional navigation** if it is required - check the `CardsFeatureWidget` in the sample app.
+
+## Scaffold 
+
+Please examine the sample application to find out how to use `Scaffold` properly with `Destinations`. Please notice that:
+- there is no need to pass `NavCotroller` to `Scaffold`
+- `Scaffold` may but doesn't have to use `NavHost` (although it is very common)
+- **all** the navigation code could be extracted from the `Scaffold` to the navigation layer.
+
+```kotlin
+@OptIn(ExperimentalMaterial3Api::class)
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
+@Composable
+internal fun HomeScreen(
+    modifier: Modifier = Modifier,
+    selectedSection: State<HomeScreenSection>,
+    onSectionSelected: (HomeScreenSection) -> Unit,
+    sectionsNavHostBuilder: @Composable (modifier: Modifier) -> Unit
+) {
+    Scaffold(modifier = modifier, bottomBar = {
+        NavigationBar(
+            modifier = Modifier
+                .height(72.dp)
+                .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
+        ) {
+            HomeScreenSection.values().forEach { section ->
+                NavigationBarItem(
+                    icon = {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                            Icon(section.icon, contentDescription = "")
+                            Text(text = section.label) // You could use `label` property of NavigationBarItem but the selection marker embraces the icon only (!)
+                        }
+                    },
+                    selected = selectedSection.value == section,
+                    onClick = { onSectionSelected(section) }
+                )
+            }
+        }
+    }) { innerPadding ->
+        sectionsNavHostBuilder(Modifier.padding(innerPadding))
+    }
+}
+```
 
 
-## Scaffold (TBD)
+
