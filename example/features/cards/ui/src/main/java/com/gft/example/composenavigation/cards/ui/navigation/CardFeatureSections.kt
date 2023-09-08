@@ -62,7 +62,7 @@ fun NavGraphBuilder.cardsSummarySection(
     onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
     onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
 ) {
-    composable(sectionDestination) {
+    composable(sectionDestination, "Cards Summary") {
         CardsSummary(
             onNavigateToCardDetails = redirect(navController, CardDetailsSectionDestination),
             onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
@@ -85,9 +85,10 @@ internal fun NavGraphBuilder.cardDetailsSection(
 
     navigation(
         destination = sectionDestination,
-        startDestination = cardDetailsDestination
+        startDestination = cardDetailsDestination,
+        label = "Card Details Section"
     ) {
-        composable(cardDetailsDestination) { card ->
+        composable(cardDetailsDestination, "Card Details") { card ->
             CardDetails(
                 card = card,
                 onNavigateToAccountDetails = onNavigateToAccountDetails,
@@ -118,9 +119,10 @@ internal fun NavGraphBuilder.freezeCardSection(
 
     navigation(
         destination = sectionDestination,
-        startDestination = freezeCardWarningDestination
+        startDestination = freezeCardWarningDestination,
+        label = "Freeze Card Section"
     ) {
-        composable(freezeCardWarningDestination) { arg ->
+        composable(freezeCardWarningDestination, "Card Freeze Warning") { arg ->
             CardFreezeWarning(
                 card = arg,
                 onNavigateToConfirmation = redirect(
@@ -130,7 +132,7 @@ internal fun NavGraphBuilder.freezeCardSection(
             )
         }
 
-        composable(freezeCardConfirmationDestination) { arg ->
+        composable(freezeCardConfirmationDestination, "Card Freeze Confirmation") { arg ->
             CardFreezeConfirmation(
                 card = arg,
                 onNavigateToNextAfterCardFrozen = { navController.popBackStack(sectionDestination, true) },
@@ -153,9 +155,10 @@ fun NavGraphBuilder.cancelCardSection(
 
     navigation(
         destination = sectionDestination,
-        startDestination = cancelCardWarningDestination
+        startDestination = cancelCardWarningDestination,
+        label = "Cancel Card Section"
     ) {
-        composable(cancelCardWarningDestination) { arg ->
+        composable(cancelCardWarningDestination, "Card Cancellation Warning") { arg ->
             CardCancellationWarning(
                 card = arg,
                 onNavigateToConfirmation = redirect(
@@ -165,7 +168,7 @@ fun NavGraphBuilder.cancelCardSection(
             )
         }
 
-        composable(cancelCardConfirmationDestination) { arg ->
+        composable(cancelCardConfirmationDestination, "Card Cancellation Confirmation") { arg ->
             CardCancellationConfirmation(
                 card = arg,
                 onNavigateToNextAfterCardCancelled = onNavigateToNextAfterCardCancelled,

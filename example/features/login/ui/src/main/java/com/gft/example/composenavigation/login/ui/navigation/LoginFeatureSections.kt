@@ -26,14 +26,15 @@ fun NavGraphBuilder.loginSection(
 
     navigation(
         destination = sectionDestination,
-        startDestination = credentialsScreenDestination
+        startDestination = credentialsScreenDestination,
+        label = "Login Section"
     ) {
-        composable(credentialsScreenDestination) {
+        composable(credentialsScreenDestination, "User Credentials") {
             UserCredentialsScreen(
                 onNavigateToOtp = { navController.navigate(otpScreenDestination) }
             )
         }
-        composable(otpScreenDestination) {
+        composable(otpScreenDestination, "Login OTP") {
             OtpScreen(
                 onSuccessfulLogin = onNavigateToNextAfterSuccessfulLogin
             )
@@ -49,7 +50,8 @@ fun NavGraphBuilder.logoutPromptSection(
 ) {
     dialog(
         sectionDestination,
-        dialogProperties = DialogProperties(dismissOnClickOutside = false)
+        dialogProperties = DialogProperties(dismissOnClickOutside = false),
+        label = "Logout Dialog"
     ) {
         LogoutDialog(
             onLogoutClicked = onNavigateToNextAfterLogout,

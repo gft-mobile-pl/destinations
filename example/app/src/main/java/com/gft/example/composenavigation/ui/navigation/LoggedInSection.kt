@@ -24,7 +24,8 @@ fun NavGraphBuilder.loggedInSection(
 
     navigation(
         destination = LoggedInSectionDestination,
-        startDestination = homeScreenDestination
+        startDestination = homeScreenDestination,
+        label = "Logged-in Section"
     ) {
         homeScreenSection(
             sectionDestination = homeScreenDestination,

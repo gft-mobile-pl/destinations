@@ -26,7 +26,7 @@ fun NavGraphBuilder.homeScreenSection(
     onNavigateBack: () -> Unit,
     sectionDestination: Destination.DestinationWithoutArgument
 ) {
-    composable(sectionDestination) {
+    composable(sectionDestination, "Home Screen") {
         val sectionsNavController = rememberNavController()
         val currentBackStackEntry = sectionsNavController.currentBackStackEntryFlow.collectAsState(sectionsNavController.currentBackStackEntry)
         val selectedSection = remember {
@@ -59,7 +59,7 @@ fun NavGraphBuilder.homeScreenSection(
                 ) {
                     HomeScreenSection.values().forEach { section ->
                         when (section) {
-                            HomeScreenSection.WIDGETS -> composable(section.toDestination()) {
+                            HomeScreenSection.WIDGETS -> composable(section.toDestination(), "Home") {
                                 WidgetsScreen(
                                     onNavigationRequest = onNavigationRequest,
                                     navController = navController
