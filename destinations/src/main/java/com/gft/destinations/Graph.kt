@@ -2,17 +2,13 @@ package com.gft.destinations
 
 import android.os.Parcelable
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.window.DialogProperties
 import androidx.navigation.NavArgumentBuilder
 import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.ComposeNavigator
 import androidx.navigation.compose.DialogNavigator
-import androidx.navigation.createGraph
 import androidx.navigation.get
 import com.gft.destinations.Destination.DestinationWithOptionalArgument
 import com.gft.destinations.Destination.DestinationWithRequiredArgument
@@ -24,6 +20,7 @@ import java.io.Serializable
  */
 inline fun NavGraphBuilder.composable(
     destination: DestinationWithoutArgument,
+    label: String? = null,
     crossinline content: @Composable () -> Unit
 ) {
     addDestination(
@@ -33,30 +30,35 @@ inline fun NavGraphBuilder.composable(
             }
             .apply {
                 id = destination.id
+                this.label = label
             }
     )
 }
 
 inline fun <reified T : Any> NavGraphBuilder.composable(
     destination: DestinationWithOptionalArgument<T>,
+    label: String? = null,
     crossinline content: @Composable (T?) -> Unit
-) = composable(destination.id, null, content)
+) = composable(destination.id, null, label, content)
 
 inline fun <reified T : Any> NavGraphBuilder.composable(
     destination: DestinationWithOptionalArgument<T>,
     defaultArgument: T,
+    label: String? = null,
     crossinline content: @Composable (T) -> Unit
-) = composable(destination.id, defaultArgument, content)
+) = composable(destination.id, defaultArgument, label, content)
 
 inline fun <reified T : Any> NavGraphBuilder.composable(
     destination: DestinationWithRequiredArgument<T>,
+    label: String? = null,
     crossinline content: @Composable (T) -> Unit
-) = composable(destination.id, null, content)
+) = composable(destination.id, null, label, content)
 
 @PublishedApi
 internal inline fun <reified T : Any?> NavGraphBuilder.composable(
     destinationId: Int,
     defaultArgument: T?,
+    label: String? = null,
     crossinline content: @Composable (T) -> Unit
 ) {
     addDestination(
@@ -66,6 +68,7 @@ internal inline fun <reified T : Any?> NavGraphBuilder.composable(
             }
             .apply {
                 id = destinationId
+                this.label = label
                 addArgument(
                     argumentName = DESTINATION_ARGUMENT_KEY,
                     argument = NavArgumentBuilder().apply(defineDestinationNavArgument<T>(defaultArgument)).build()
@@ -80,6 +83,7 @@ internal inline fun <reified T : Any?> NavGraphBuilder.composable(
 inline fun NavGraphBuilder.dialog(
     destination: DestinationWithoutArgument,
     dialogProperties: DialogProperties = DialogProperties(),
+    label: String? = null,
     crossinline content: @Composable () -> Unit
 ) {
     addDestination(
@@ -89,6 +93,7 @@ inline fun NavGraphBuilder.dialog(
             }
             .apply {
                 id = destination.id
+                this.label = label
             }
     )
 }
@@ -96,27 +101,31 @@ inline fun NavGraphBuilder.dialog(
 inline fun <reified T : Any> NavGraphBuilder.dialog(
     destination: DestinationWithOptionalArgument<T>,
     dialogProperties: DialogProperties = DialogProperties(),
+    label: String? = null,
     crossinline content: @Composable (T?) -> Unit
-) = dialog(destination.id, null, dialogProperties, content)
+) = dialog(destination.id, null, dialogProperties, label, content)
 
 inline fun <reified T : Any> NavGraphBuilder.dialog(
     destination: DestinationWithOptionalArgument<T>,
     defaultArgument: T,
     dialogProperties: DialogProperties = DialogProperties(),
+    label: String? = null,
     crossinline content: @Composable (T) -> Unit
-) = dialog(destination.id, defaultArgument, dialogProperties, content)
+) = dialog(destination.id, defaultArgument, dialogProperties, label, content)
 
 inline fun <reified T : Any> NavGraphBuilder.dialog(
     destination: DestinationWithRequiredArgument<T>,
     dialogProperties: DialogProperties = DialogProperties(),
+    label: String? = null,
     crossinline content: @Composable (T) -> Unit
-) = dialog(destination.id, null, dialogProperties, content)
+) = dialog(destination.id, null, dialogProperties, label, content)
 
 @PublishedApi
 internal inline fun <reified T : Any?> NavGraphBuilder.dialog(
     destinationId: Int,
     defaultArgument: T?,
     dialogProperties: DialogProperties,
+    label: String? = null,
     crossinline content: @Composable (T) -> Unit
 ) {
     addDestination(
@@ -126,6 +135,7 @@ internal inline fun <reified T : Any?> NavGraphBuilder.dialog(
             }
             .apply {
                 id = destinationId
+                this.label = label
                 addArgument(
                     argumentName = DESTINATION_ARGUMENT_KEY,
                     argument = NavArgumentBuilder().apply(defineDestinationNavArgument<T>(defaultArgument)).build()
@@ -140,22 +150,30 @@ internal inline fun <reified T : Any?> NavGraphBuilder.dialog(
 fun NavGraphBuilder.navigation(
     destination: Destination<*>,
     startDestination: DestinationWithoutArgument,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
-    return destination(NavGraphBuilder(provider, destination.id, startDestination.id).apply(builder))
+    return destination(
+        NavGraphBuilder(provider, destination.id, startDestination.id).apply {
+            this.label = label
+            builder()
+        }
+    )
 }
 
 inline fun <reified T : Any> NavGraphBuilder.navigation(
     destination: DestinationWithoutArgument,
     startDestination: DestinationWithOptionalArgument<T>,
     defaultArgument: T? = null,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
     return destination(
         NavGraphBuilder(provider, destination.id, startDestination.id)
             .apply {
+                this.label = label
                 argument(
                     name = DESTINATION_ARGUMENT_KEY,
                     argumentBuilder = defineDestinationNavArgument<T?>(defaultArgument)
@@ -169,12 +187,14 @@ inline fun <reified T : Any> NavGraphBuilder.navigation(
     destination: DestinationWithoutArgument,
     startDestination: DestinationWithRequiredArgument<T>,
     defaultArgument: T,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
     return destination(
         NavGraphBuilder(provider, destination.id, startDestination.id)
             .apply {
+                this.label = label
                 argument(
                     name = DESTINATION_ARGUMENT_KEY,
                     argumentBuilder = defineDestinationNavArgument(defaultArgument)
@@ -188,12 +208,14 @@ inline fun <reified T : Any> NavGraphBuilder.navigation(
     destination: DestinationWithOptionalArgument<T>,
     startDestination: DestinationWithOptionalArgument<T>,
     defaultArgument: T? = null,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
     return destination(
         NavGraphBuilder(provider, destination.id, startDestination.id)
             .apply {
+                this.label = label
                 argument(
                     name = DESTINATION_ARGUMENT_KEY,
                     argumentBuilder = defineDestinationNavArgument<T?>(defaultArgument)
@@ -207,12 +229,14 @@ inline fun <reified T : Any> NavGraphBuilder.navigation(
     destination: DestinationWithOptionalArgument<T>,
     startDestination: DestinationWithRequiredArgument<T>,
     defaultArgument: T,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
     return destination(
         NavGraphBuilder(provider, destination.id, startDestination.id)
             .apply {
+                this.label = label
                 argument(
                     name = DESTINATION_ARGUMENT_KEY,
                     argumentBuilder = defineDestinationNavArgument(defaultArgument)
@@ -225,19 +249,31 @@ inline fun <reified T : Any> NavGraphBuilder.navigation(
 fun <T : Any> NavGraphBuilder.navigation(
     destination: DestinationWithRequiredArgument<T>,
     startDestination: DestinationWithOptionalArgument<T>,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
-    return destination(NavGraphBuilder(provider, destination.id, startDestination.id).apply(builder))
+    return destination(
+        NavGraphBuilder(provider, destination.id, startDestination.id).apply {
+            this.label = label
+            builder()
+        }
+    )
 }
 
 fun <T : Any> NavGraphBuilder.navigation(
     destination: DestinationWithRequiredArgument<T>,
     startDestination: DestinationWithRequiredArgument<T>,
+    label: String? = null,
     builder: NavGraphBuilder.() -> Unit
 ) {
     @Suppress("DEPRECATION")
-    return destination(NavGraphBuilder(provider, destination.id, startDestination.id).apply(builder))
+    return destination(
+        NavGraphBuilder(provider, destination.id, startDestination.id).apply {
+            this.label = label
+            builder()
+        }
+    )
 }
 
 /**
