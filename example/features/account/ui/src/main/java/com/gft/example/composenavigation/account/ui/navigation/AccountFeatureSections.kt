@@ -33,7 +33,7 @@ fun NavGraphBuilder.accountSummarySection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument
 ) {
-    composable(sectionDestination) {
+    composable(sectionDestination, "Account Summary") {
         AccountSummary(
             onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination)
         )
@@ -47,7 +47,7 @@ internal fun NavGraphBuilder.accountDetailsSection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument
 ) {
-    composable(sectionDestination) {
+    composable(sectionDestination, "Account Details") {
         AccountDetails()
     }
 }
@@ -61,4 +61,3 @@ fun AccountFeatureWidget(navController: NavController) {
         onNavigateToAccountDetails = redirect(navController, AccountDetailsDestination)
     )
 }
-

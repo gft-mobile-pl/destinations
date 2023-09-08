@@ -26,7 +26,7 @@ fun ApplicationNavHost(
         navController = navController,
         startDestination = welcomeScreenDestination
     ) {
-        composable(welcomeScreenDestination) {
+        composable(welcomeScreenDestination, "Welcome") {
             WelcomeScreen(
                 onNavigateToNext = redirect(navController, LoginSectionDestination)
             )
