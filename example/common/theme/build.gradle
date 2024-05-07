@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.gft.example.composenavigation.common.theme'
-    compileSdk 33
+    compileSdk rootProject.ext.compile_sdk
 
     defaultConfig {
-        minSdk 24
-        targetSdk 33
+        minSdk rootProject.ext.min_sdk
+        targetSdk rootProject.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -22,23 +22,23 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.ext.java_version
+        targetCompatibility rootProject.ext.java_version
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.1'
+        kotlinCompilerExtensionVersion rootProject.ext.compiler_version
     }
 
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = rootProject.ext.java_version.toString()
     }
 }
 
 dependencies {
-    implementation 'androidx.core:core-ktx:1.9.0'
+    implementation "androidx.core:core-ktx:$core_ktx_version"
 
-    api 'androidx.compose.material3:material3:1.1.0-alpha04'
+    api "androidx.compose.material3:material3:$material3_version"
 }

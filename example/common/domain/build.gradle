@@ -4,10 +4,10 @@ plugins {
 }
 
 java {
-    sourceCompatibility = JavaVersion.VERSION_1_8
-    targetCompatibility = JavaVersion.VERSION_1_8
+    sourceCompatibility = rootProject.ext.java_version
+    targetCompatibility = rootProject.ext.java_version
 }
 
 dependencies {
-    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4"
+    api "org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines"
 }

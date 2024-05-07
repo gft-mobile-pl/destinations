@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.gft.example.composenavigation.account.ui'
-    compileSdk 33
+    compileSdk rootProject.ext.compile_sdk
 
     defaultConfig {
-        minSdk 24
-        targetSdk 33
+        minSdk rootProject.ext.min_sdk
+        targetSdk rootProject.ext.target_sdk
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -25,17 +25,17 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility rootProject.ext.java_version
+        targetCompatibility rootProject.ext.java_version
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = rootProject.ext.java_version.toString()
     }
     buildFeatures {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.4.1'
+        kotlinCompilerExtensionVersion rootProject.ext.compiler_version
     }
     packagingOptions {
         resources {
@@ -58,6 +58,4 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
-
-    testImplementation 'junit:junit:4.13.2'
 }
