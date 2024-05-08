@@ -8,6 +8,7 @@ import androidx.navigation.navOptions
 import com.gft.destinations.Destination
 import com.gft.destinations.NavHost
 import com.gft.destinations.composable
+import com.gft.destinations.log.log
 import com.gft.destinations.popBackStack
 import com.gft.destinations.redirect
 import com.gft.example.composenavigation.login.ui.navigation.LoginSectionDestination
@@ -17,7 +18,9 @@ import com.gft.example.composenavigation.ui.screens.welcomescreen.WelcomeScreen
 @Composable
 fun ApplicationNavHost(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController().log {
+        println("#Nav $it")
+    }
 ) {
     val welcomeScreenDestination = Destination.withoutArgument()
 
