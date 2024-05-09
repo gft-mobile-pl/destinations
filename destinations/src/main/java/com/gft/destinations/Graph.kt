@@ -323,5 +323,4 @@ internal inline fun <reified T : Any?> defineDestinationNavArgument(
         }
         else -> throw IllegalArgumentException("Arguments of type ${T::class.java.name} is not supported by Destination.")
     }
-    type = NavType.ParcelableType(T::class.java)
 }
