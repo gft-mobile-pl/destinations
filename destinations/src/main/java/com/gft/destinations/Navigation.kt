@@ -13,52 +13,52 @@ import java.io.Serializable
 
 fun NavController.navigate(
     destination: DestinationWithoutArgument,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) = navigateToDestination(destination, null, navOptions)
 
 fun <T : Any> NavController.navigate(
     destination: DestinationWithOptionalArgument<T>,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) = navigateToDestination(destination, null, navOptions)
 
 fun <T : Any> NavController.navigate(
     destination: DestinationWithOptionalArgument<T>,
     argument: T?,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) = navigateToDestination(destination, argument, navOptions)
 
 fun <T : Any> NavController.navigate(
     destination: DestinationWithRequiredArgument<T>,
     argument: T,
-    navOptions: NavOptions? = null
+    navOptions: NavOptions? = null,
 ) = navigateToDestination(destination, argument, navOptions)
 
 fun NavController.navigate(
     destination: DestinationWithoutArgument,
-    navOptionsBuilder: NavOptionsBuilder.() -> Unit
+    navOptionsBuilder: NavOptionsBuilder.() -> Unit,
 ) = navigateToDestination(destination, null, navOptions(navOptionsBuilder))
 
 fun <T : Any> NavController.navigate(
     destination: DestinationWithOptionalArgument<T>,
-    navOptionsBuilder: NavOptionsBuilder.() -> Unit
+    navOptionsBuilder: NavOptionsBuilder.() -> Unit,
 ) = navigateToDestination(destination, null, navOptions(navOptionsBuilder))
 
 fun <T : Any> NavController.navigate(
     destination: DestinationWithOptionalArgument<T>,
     argument: T?,
-    navOptionsBuilder: NavOptionsBuilder.() -> Unit
+    navOptionsBuilder: NavOptionsBuilder.() -> Unit,
 ) = navigateToDestination(destination, argument, navOptions(navOptionsBuilder))
 
 fun <T : Any> NavController.navigate(
     destination: DestinationWithRequiredArgument<T>,
     argument: T,
-    navOptionsBuilder: NavOptionsBuilder.() -> Unit
+    navOptionsBuilder: NavOptionsBuilder.() -> Unit,
 ) = navigateToDestination(destination, argument, navOptions(navOptionsBuilder))
 
 private fun <T : Any?> NavController.navigateToDestination(
     destination: Destination<T>,
     argument: T?,
-    navOptions: NavOptions?
+    navOptions: NavOptions?,
 ) {
     if (argument != null) {
         navigate(

@@ -879,7 +879,6 @@ You may note that:
 - **all** the navigation code could be extracted from the `Scaffold` to the navigation layer.
 
 ```kotlin
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun HomeScreen(
@@ -894,7 +893,7 @@ internal fun HomeScreen(
                 .height(72.dp)
                 .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
         ) {
-            HomeScreenSection.values().forEach { section ->
+            HomeScreenSection.entries.forEach { section ->
                 NavigationBarItem(
                     icon = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

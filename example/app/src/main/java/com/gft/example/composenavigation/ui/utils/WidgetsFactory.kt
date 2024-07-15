@@ -9,7 +9,7 @@ object WidgetsFactory {
     @Composable
     fun CreateWidgets(
         navController: NavController,
-        onNavigationRequest: (Any) -> Unit
+        onNavigationRequest: (Any) -> Unit,
     ) {
         CardsFeatureWidget(navController = navController, onNavigateToAccountDetails = onNavigationRequest)
         AccountFeatureWidget(navController = navController)

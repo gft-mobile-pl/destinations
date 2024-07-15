@@ -40,5 +40,5 @@ object CardRepositoryMock {
 
 data class Card(
     val id: String,
-    val isFrozen: Boolean
+    val isFrozen: Boolean,
 )

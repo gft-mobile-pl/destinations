@@ -19,7 +19,7 @@ val LoginSectionDestination = Destination.withoutArgument()
 fun NavGraphBuilder.loginSection(
     navController: NavHostController,
     sectionDestination: DestinationWithoutArgument = LoginSectionDestination,
-    onNavigateToNextAfterSuccessfulLogin: () -> Unit
+    onNavigateToNextAfterSuccessfulLogin: () -> Unit,
 ) {
     val credentialsScreenDestination = Destination.withoutArgument()
     val otpScreenDestination = Destination.withoutArgument()
@@ -46,7 +46,7 @@ val LogoutPromptSectionDestination = Destination.withoutArgument()
 fun NavGraphBuilder.logoutPromptSection(
     navController: NavHostController,
     sectionDestination: DestinationWithoutArgument = LogoutPromptSectionDestination,
-    onNavigateToNextAfterLogout: () -> Unit
+    onNavigateToNextAfterLogout: () -> Unit,
 ) {
     dialog(
         sectionDestination,

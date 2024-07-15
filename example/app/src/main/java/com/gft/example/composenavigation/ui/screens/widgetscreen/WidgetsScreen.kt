@@ -11,7 +11,7 @@ import com.gft.example.composenavigation.ui.utils.WidgetsFactory
 fun WidgetsScreen(
     onNavigationRequest: (Any) -> Unit,
     navController: NavController,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier.fillMaxWidth()
@@ -28,5 +28,4 @@ fun WidgetsScreen(
             onNavigationRequest = onNavigationRequest
         )
     }
-
 }

@@ -67,7 +67,4 @@ dependencies {
 
     implementation "androidx.navigation:navigation-compose:$compose_navigation_version"
     implementation "androidx.compose.material:material:$compose_material_version"
-
-    implementation "io.insert-koin:koin-android:$koin_android_version"
-    implementation "io.insert-koin:koin-androidx-compose:$koin_android_compose_version"
 }

@@ -47,7 +47,7 @@ fun WelcomeScreen(
 @Preview(showSystemUi = true)
 @Composable
 internal fun WelcomeScreenPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         WelcomeScreen(onNavigateToNext = {})
     }
 }

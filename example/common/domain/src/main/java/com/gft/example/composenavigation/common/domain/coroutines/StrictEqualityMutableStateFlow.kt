@@ -24,7 +24,7 @@ import kotlinx.coroutines.flow.distinctUntilChanged
  * However if a strict equality test is used to compare items the "A" would be emitted in the point 4.
  */
 class StrictEqualityMutableStateFlow<T>(
-    initialValue: T?
+    initialValue: T?,
 ) : MutableStateFlow<T?> {
     private val source = MutableStateFlow(StrictEqualityDataContainer<T?>(initialValue))
     override val subscriptionCount = source.subscriptionCount

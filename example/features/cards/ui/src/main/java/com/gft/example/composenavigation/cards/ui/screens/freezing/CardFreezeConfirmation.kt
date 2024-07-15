@@ -21,7 +21,7 @@ internal fun CardFreezeConfirmation(
     card: CardArgument,
     onNavigateToNextAfterCardFrozen: () -> Unit,
     onNavigateToNextAfterCardFreezeAborted: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -56,7 +56,7 @@ internal fun CardFreezeConfirmation(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 fun CardFreezeConfirmationPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         CardFreezeConfirmation(
             card = CardArgument("#1"),
             onNavigateToNextAfterCardFrozen = {},

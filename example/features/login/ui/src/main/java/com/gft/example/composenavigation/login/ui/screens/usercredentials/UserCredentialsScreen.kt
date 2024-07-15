@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,11 +15,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun UserCredentialsScreen(
     modifier: Modifier = Modifier,
-    onNavigateToOtp: () -> Unit
+    onNavigateToOtp: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -58,7 +56,7 @@ fun UserCredentialsScreen(
 @Preview(showSystemUi = true)
 @Composable
 internal fun UserCredentialsScreenPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         UserCredentialsScreen(onNavigateToOtp = { })
     }
 }

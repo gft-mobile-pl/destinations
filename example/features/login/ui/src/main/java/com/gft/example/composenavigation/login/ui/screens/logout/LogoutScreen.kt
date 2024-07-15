@@ -31,7 +31,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 fun LogoutDialog(
     modifier: Modifier = Modifier,
     onLogoutClicked: () -> Unit,
-    onCancelClicked: () -> Unit
+    onCancelClicked: () -> Unit,
 ) {
     Box(modifier = modifier.width(280.dp)) {
         Box(
@@ -98,7 +98,7 @@ fun LogoutDialog(
 @Preview(showSystemUi = true)
 @Composable
 internal fun LogoutDialogPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         LogoutDialog(
             onLogoutClicked = {},
             onCancelClicked = {}

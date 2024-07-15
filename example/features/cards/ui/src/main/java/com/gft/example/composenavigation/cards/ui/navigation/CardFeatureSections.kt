@@ -46,7 +46,7 @@ internal val FreezeCardSectionDestination = Destination.withArgument<CardArgumen
 fun NavGraphBuilder.cardFeatureSections(
     navController: NavController,
     onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
-    onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
+    onNavigateToAccountDetails: () -> Unit, // example of cross-feature navigation
 ) {
     cardsSummarySection(navController, CardsSummarySectionDestination, onNavigateToAccountSummary, onNavigateToAccountDetails)
     cardDetailsSection(navController, CardDetailsSectionDestination, onNavigateToAccountDetails)
@@ -60,7 +60,7 @@ fun NavGraphBuilder.cardsSummarySection(
     navController: NavController,
     sectionDestination: DestinationWithoutArgument,
     onNavigateToAccountSummary: () -> Unit, // example of cross-feature navigation
-    onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
+    onNavigateToAccountDetails: () -> Unit, // example of cross-feature navigation
 ) {
     composable(sectionDestination, "Cards Summary") {
         CardsSummary(
@@ -78,7 +78,7 @@ fun NavGraphBuilder.cardsSummarySection(
 internal fun NavGraphBuilder.cardDetailsSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>,
-    onNavigateToAccountDetails: () -> Unit // example of cross-feature navigation
+    onNavigateToAccountDetails: () -> Unit, // example of cross-feature navigation
 ) {
     val cardDetailsDestination = Destination.withArgument<CardArgument>()
     val cancelCardDestination = Destination.withArgument<CardArgument>()
@@ -112,7 +112,7 @@ internal fun NavGraphBuilder.cardDetailsSection(
  */
 internal fun NavGraphBuilder.freezeCardSection(
     navController: NavController,
-    sectionDestination: DestinationWithRequiredArgument<CardArgument>
+    sectionDestination: DestinationWithRequiredArgument<CardArgument>,
 ) {
     val freezeCardWarningDestination = Destination.withArgument<CardArgument>()
     val freezeCardConfirmationDestination = Destination.withArgument<CardArgument>()
@@ -148,7 +148,7 @@ internal fun NavGraphBuilder.freezeCardSection(
 fun NavGraphBuilder.cancelCardSection(
     navController: NavController,
     onNavigateToNextAfterCardCancelled: () -> Unit,
-    sectionDestination: DestinationWithRequiredArgument<CardArgument>
+    sectionDestination: DestinationWithRequiredArgument<CardArgument>,
 ) {
     val cancelCardWarningDestination = Destination.withArgument<CardArgument>()
     val cancelCardConfirmationDestination = Destination.withArgument<CardArgument>()
@@ -186,7 +186,7 @@ object NavigateToAccountDetailsRequest
 @Composable
 fun CardsFeatureWidget(
     navController: NavController,
-    onNavigateToAccountDetails: (NavigateToAccountDetailsRequest) -> Unit
+    onNavigateToAccountDetails: (NavigateToAccountDetailsRequest) -> Unit,
 ) {
     CardsFeatureWidget(
         onNavigateToCardDetails = redirect(navController, CardDetailsSectionDestination),

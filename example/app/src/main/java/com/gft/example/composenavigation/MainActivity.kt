@@ -7,13 +7,13 @@ import androidx.activity.compose.setContent
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
 import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigationTheme
-import com.gft.example.composenavigation.ui.navigation.MainView
+import com.gft.example.composenavigation.ui.MainView
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ComposeMultimoduleNavigationTheme() {
+            ComposeMultimoduleNavigationTheme {
                 MainView()
             }
         }

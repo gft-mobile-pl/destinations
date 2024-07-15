@@ -20,7 +20,7 @@ fun ApplicationNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController().log {
         println("#Nav $it")
-    }
+    },
 ) {
     val welcomeScreenDestination = Destination.withoutArgument()
 

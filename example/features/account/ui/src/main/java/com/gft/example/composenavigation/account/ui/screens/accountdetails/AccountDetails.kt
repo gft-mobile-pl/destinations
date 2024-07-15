@@ -14,7 +14,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 
 @Composable
 internal fun AccountDetails(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -36,7 +36,7 @@ internal fun AccountDetails(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 private fun AccountDetailsPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         AccountDetails()
     }
 }

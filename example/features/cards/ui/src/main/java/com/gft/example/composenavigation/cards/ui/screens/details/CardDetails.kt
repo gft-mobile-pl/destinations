@@ -26,7 +26,7 @@ internal fun CardDetails(
     card: CardArgument,
     onNavigateToAccountDetails: () -> Unit,
     onNavigateToFreezeCard: (CardArgument) -> Unit,
-    onNavigateToCancelCard: (CardArgument) -> Unit
+    onNavigateToCancelCard: (CardArgument) -> Unit,
 ) {
     val cardDetails = CardRepositoryMock.streamCardDetails(card.id)
         .collectAsStateWithLifecycle(initialValue = CardRepositoryMock.getCardDetails(card.id))
@@ -92,7 +92,7 @@ internal fun CardDetails(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 fun CardDetailsPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         CardDetails(
             card = CardArgument("#1"),
             onNavigateToAccountDetails = {},

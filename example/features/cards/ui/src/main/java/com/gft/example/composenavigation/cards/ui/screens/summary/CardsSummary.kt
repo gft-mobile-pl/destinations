@@ -25,7 +25,7 @@ internal fun CardsSummary(
     onNavigateToCardDetails: (CardArgument) -> Unit,
     onNavigateToFreezeCard: (CardArgument) -> Unit,
     onNavigateToAccountDetails: () -> Unit,
-    onNavigateToAccountSummary: () -> Unit
+    onNavigateToAccountSummary: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -100,7 +100,7 @@ internal fun CardsSummary(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 fun CardsSummaryPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         CardsSummary(
             onNavigateToCardDetails = {},
             onNavigateToFreezeCard = {},

@@ -31,7 +31,7 @@ fun NavGraphBuilder.accountFeatureSections(navController: NavController) {
  */
 fun NavGraphBuilder.accountSummarySection(
     navController: NavController,
-    sectionDestination: DestinationWithoutArgument
+    sectionDestination: DestinationWithoutArgument,
 ) {
     composable(sectionDestination, "Account Summary") {
         AccountSummary(
@@ -45,7 +45,7 @@ fun NavGraphBuilder.accountSummarySection(
  */
 internal fun NavGraphBuilder.accountDetailsSection(
     navController: NavController,
-    sectionDestination: DestinationWithoutArgument
+    sectionDestination: DestinationWithoutArgument,
 ) {
     composable(sectionDestination, "Account Details") {
         AccountDetails()

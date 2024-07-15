@@ -18,7 +18,7 @@ val LoggedInSectionDestination = Destination.withoutArgument()
 
 fun NavGraphBuilder.loggedInSection(
     onNavigateToNextAfterLogout: () -> Unit,
-    navController: NavHostController
+    navController: NavHostController,
 ) {
     val homeScreenDestination = Destination.withoutArgument()
 

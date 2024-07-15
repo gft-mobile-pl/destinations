@@ -24,14 +24,14 @@ fun NavGraphBuilder.homeScreenSection(
     onNavigateToAccountDetails: () -> Unit,
     onNavigationRequest: (Any) -> Unit, // this callback is here to demonstrate a very rare case of unnamed/context-less navigation
     onNavigateBack: () -> Unit,
-    sectionDestination: Destination.DestinationWithoutArgument
+    sectionDestination: Destination.DestinationWithoutArgument,
 ) {
     composable(sectionDestination, "Home Screen") {
         val sectionsNavController = rememberNavController()
         val currentBackStackEntry = sectionsNavController.currentBackStackEntryFlow.collectAsState(sectionsNavController.currentBackStackEntry)
         val selectedSection = remember {
             derivedStateOf {
-                HomeScreenSection.values().firstOrNull { section ->
+                HomeScreenSection.entries.firstOrNull { section ->
                     currentBackStackEntry.value?.destination?.hierarchy?.any { it.id == section.toDestination().id } == true
                 } ?: HomeScreenSection.WIDGETS
             }
@@ -57,7 +57,7 @@ fun NavGraphBuilder.homeScreenSection(
                     startDestination = HomeScreenSection.WIDGETS.toDestination(),
                     modifier = modifier,
                 ) {
-                    HomeScreenSection.values().forEach { section ->
+                    HomeScreenSection.entries.forEach { section ->
                         when (section) {
                             HomeScreenSection.WIDGETS -> composable(section.toDestination(), "Home") {
                                 WidgetsScreen(
@@ -65,10 +65,12 @@ fun NavGraphBuilder.homeScreenSection(
                                     navController = navController
                                 )
                             }
+
                             HomeScreenSection.ACCOUNT -> accountSummarySection(
                                 navController = navController,
                                 sectionDestination = section.toDestination()
                             )
+
                             HomeScreenSection.CARD -> cardsSummarySection(
                                 navController = navController,
                                 sectionDestination = section.toDestination(),

@@ -1,6 +1,6 @@
 package com.gft.example.composenavigation.common.domain.data
 
-class ConsumableEvent<T> (private val payload: T) {
+class ConsumableEvent<T>(private val payload: T) {
     /**
      * States whether the event has been consumed already.
      */

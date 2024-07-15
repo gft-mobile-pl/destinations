@@ -25,7 +25,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 internal fun CardsFeatureWidget(
     modifier: Modifier = Modifier,
     onNavigateToCardDetails: (CardArgument) -> Unit,
-    onNavigateToAccountDetails: () -> Unit
+    onNavigateToAccountDetails: () -> Unit,
 ) {
     Column(
         modifier = modifier
@@ -36,7 +36,9 @@ internal fun CardsFeatureWidget(
 
         Card {
             Column(
-                modifier = Modifier.fillMaxWidth().padding(12.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(12.dp)
             ) {
                 Text(
                     text = "Cards widget",
@@ -82,7 +84,7 @@ internal fun CardsFeatureWidget(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 fun CardsWidgetPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         CardsFeatureWidget(
             onNavigateToCardDetails = {},
             onNavigateToAccountDetails = {}

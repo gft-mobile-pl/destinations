@@ -20,7 +20,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 internal fun CardFreezeWarning(
     card: CardArgument,
     onNavigateToConfirmation: (CardArgument) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -54,7 +54,7 @@ internal fun CardFreezeWarning(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 fun CardFreezeWarningPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         CardFreezeWarning(
             card = CardArgument("#1"),
             onNavigateToConfirmation = {}

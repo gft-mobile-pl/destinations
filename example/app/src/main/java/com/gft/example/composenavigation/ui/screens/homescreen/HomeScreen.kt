@@ -9,7 +9,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Warning
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -29,14 +28,13 @@ internal enum class HomeScreenSection(val icon: ImageVector, val label: String) 
     CARD(Icons.Filled.Warning, "Card")
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 internal fun HomeScreen(
     modifier: Modifier = Modifier,
     selectedSection: State<HomeScreenSection>,
     onSectionSelected: (HomeScreenSection) -> Unit,
-    sectionsNavHostBuilder: @Composable (modifier: Modifier) -> Unit
+    sectionsNavHostBuilder: @Composable (modifier: Modifier) -> Unit,
 ) {
     Scaffold(modifier = modifier, bottomBar = {
         NavigationBar(
@@ -44,7 +42,7 @@ internal fun HomeScreen(
                 .height(72.dp)
                 .clip(RoundedCornerShape(15.dp, 15.dp, 0.dp, 0.dp))
         ) {
-            HomeScreenSection.values().forEach { section ->
+            HomeScreenSection.entries.forEach { section ->
                 NavigationBarItem(
                     icon = {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {

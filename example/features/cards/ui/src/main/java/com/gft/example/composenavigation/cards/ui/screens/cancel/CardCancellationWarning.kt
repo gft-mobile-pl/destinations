@@ -20,7 +20,7 @@ import com.gft.example.composenavigation.common.theme.ComposeMultimoduleNavigati
 internal fun CardCancellationWarning(
     card: CardArgument,
     onNavigateToConfirmation: (CardArgument) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -54,7 +54,7 @@ internal fun CardCancellationWarning(
 @Preview(showSystemUi = false, heightDp = 800)
 @Composable
 fun CardCancellationWarningPreview() {
-    ComposeMultimoduleNavigationTheme() {
+    ComposeMultimoduleNavigationTheme {
         CardCancellationWarning(
             card = CardArgument("#1"),
             onNavigateToConfirmation = {}

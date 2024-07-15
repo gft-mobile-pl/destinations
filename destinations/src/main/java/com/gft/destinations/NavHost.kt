@@ -13,7 +13,7 @@ fun NavHost(
     startDestination: Destination<out Any?>,
     modifier: Modifier = Modifier,
     destination: Destination<out Any>? = null,
-    builder: NavGraphBuilder.() -> Unit
+    builder: NavGraphBuilder.() -> Unit,
 ) {
     androidx.navigation.compose.NavHost(
         navController,
