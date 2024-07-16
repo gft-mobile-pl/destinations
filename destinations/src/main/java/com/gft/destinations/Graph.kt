@@ -306,7 +306,7 @@ internal inline fun <reified T : Any?> extractArgument(backStackEntry: NavBackSt
 internal inline fun <reified T : Any?> defineDestinationNavArgument(
     defaultArgument: T?,
 ): NavArgumentBuilder.() -> Unit = {
-    nullable = null !is T
+    nullable = null is T
     if (defaultArgument != null) {
         defaultValue = defaultArgument
     }
