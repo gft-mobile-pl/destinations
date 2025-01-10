@@ -10,7 +10,7 @@ private var lastId = 1000
 sealed class Destination<T> private constructor() {
     val id: Int = ++lastId
 
-    class DestinationWithoutArgument internal constructor() : Destination<Nothing>()
+    class DestinationWithoutArgument internal constructor() : Destination<Unit>()
     class DestinationWithOptionalArgument<T : Any> internal constructor() : Destination<T?>()
     class DestinationWithRequiredArgument<T : Any> internal constructor() : Destination<T>()
 
