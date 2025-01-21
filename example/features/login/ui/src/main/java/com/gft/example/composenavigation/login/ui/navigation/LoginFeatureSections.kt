@@ -15,26 +15,29 @@ import com.gft.example.composenavigation.login.ui.screens.otp.OtpScreen
 import com.gft.example.composenavigation.login.ui.screens.usercredentials.UserCredentialsScreen
 
 val LoginSectionDestination = Destination.withoutArgument()
+private val CredentialsScreenDestination = Destination.withoutArgument()
+private val OtpScreenDestination = Destination.withoutArgument()
 
 fun NavGraphBuilder.loginSection(
     navController: NavHostController,
     sectionDestination: DestinationWithoutArgument = LoginSectionDestination,
     onNavigateToNextAfterSuccessfulLogin: () -> Unit,
 ) {
-    val credentialsScreenDestination = Destination.withoutArgument()
-    val otpScreenDestination = Destination.withoutArgument()
+
 
     navigation(
         destination = sectionDestination,
-        startDestination = credentialsScreenDestination,
+        startDestination = CredentialsScreenDestination,
         label = "Login Section"
     ) {
-        composable(credentialsScreenDestination, "User Credentials") {
+        composable(CredentialsScreenDestination, "User Credentials") {
             UserCredentialsScreen(
-                onNavigateToOtp = { navController.navigate(otpScreenDestination) }
+                onNavigateToOtp = {
+                    navController.navigate(OtpScreenDestination)
+                }
             )
         }
-        composable(otpScreenDestination, "Login OTP") {
+        composable(OtpScreenDestination, "Login OTP") {
             OtpScreen(
                 onSuccessfulLogin = onNavigateToNextAfterSuccessfulLogin
             )

@@ -75,25 +75,24 @@ fun NavGraphBuilder.cardsSummarySection(
 /**
  * Card details section.
  */
+private val CardDetailsDestination = Destination.withArgument<CardArgument>()
+private val CancelCardDestination = Destination.withArgument<CardArgument>()
 internal fun NavGraphBuilder.cardDetailsSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>,
     onNavigateToAccountDetails: () -> Unit, // example of cross-feature navigation
 ) {
-    val cardDetailsDestination = Destination.withArgument<CardArgument>()
-    val cancelCardDestination = Destination.withArgument<CardArgument>()
-
     navigation(
         destination = sectionDestination,
-        startDestination = cardDetailsDestination,
+        startDestination = CardDetailsDestination,
         label = "Card Details Section"
     ) {
-        composable(cardDetailsDestination, "Card Details") { card ->
+        composable(CardDetailsDestination, "Card Details") { card ->
             CardDetails(
                 card = card,
                 onNavigateToAccountDetails = onNavigateToAccountDetails,
                 onNavigateToFreezeCard = redirect(navController, FreezeCardSectionDestination),
-                onNavigateToCancelCard = redirect(navController, cancelCardDestination)
+                onNavigateToCancelCard = redirect(navController, CancelCardDestination)
             )
         }
 
@@ -102,7 +101,7 @@ internal fun NavGraphBuilder.cardDetailsSection(
             onNavigateToNextAfterCardCancelled = {
                 navController.popBackStack(destination = sectionDestination, inclusive = true)
             },
-            sectionDestination = cancelCardDestination
+            sectionDestination = CancelCardDestination
         )
     }
 }
@@ -110,29 +109,28 @@ internal fun NavGraphBuilder.cardDetailsSection(
 /**
  * Freeze card section
  */
+private val FreezeCardWarningDestination = Destination.withArgument<CardArgument>()
+private val FreezeCardConfirmationDestination = Destination.withArgument<CardArgument>()
 internal fun NavGraphBuilder.freezeCardSection(
     navController: NavController,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>,
 ) {
-    val freezeCardWarningDestination = Destination.withArgument<CardArgument>()
-    val freezeCardConfirmationDestination = Destination.withArgument<CardArgument>()
-
     navigation(
         destination = sectionDestination,
-        startDestination = freezeCardWarningDestination,
+        startDestination = FreezeCardWarningDestination,
         label = "Freeze Card Section"
     ) {
-        composable(freezeCardWarningDestination, "Card Freeze Warning") { arg ->
+        composable(FreezeCardWarningDestination, "Card Freeze Warning") { arg ->
             CardFreezeWarning(
                 card = arg,
                 onNavigateToConfirmation = redirect(
                     navController,
-                    freezeCardConfirmationDestination
+                    FreezeCardConfirmationDestination
                 ) // You should rather use Session instead of re-passing card argument, but this example focuses on navigation only.
             )
         }
 
-        composable(freezeCardConfirmationDestination, "Card Freeze Confirmation") { arg ->
+        composable(FreezeCardConfirmationDestination, "Card Freeze Confirmation") { arg ->
             CardFreezeConfirmation(
                 card = arg,
                 onNavigateToNextAfterCardFrozen = { navController.popBackStack(sectionDestination, true) },
@@ -145,30 +143,29 @@ internal fun NavGraphBuilder.freezeCardSection(
 /**
  * Cancel card section
  */
+private val CancelCardWarningDestination = Destination.withArgument<CardArgument>()
+private val CancelCardConfirmationDestination = Destination.withArgument<CardArgument>()
 fun NavGraphBuilder.cancelCardSection(
     navController: NavController,
     onNavigateToNextAfterCardCancelled: () -> Unit,
     sectionDestination: DestinationWithRequiredArgument<CardArgument>,
 ) {
-    val cancelCardWarningDestination = Destination.withArgument<CardArgument>()
-    val cancelCardConfirmationDestination = Destination.withArgument<CardArgument>()
-
     navigation(
         destination = sectionDestination,
-        startDestination = cancelCardWarningDestination,
+        startDestination = CancelCardWarningDestination,
         label = "Cancel Card Section"
     ) {
-        composable(cancelCardWarningDestination, "Card Cancellation Warning") { arg ->
+        composable(CancelCardWarningDestination, "Card Cancellation Warning") { arg ->
             CardCancellationWarning(
                 card = arg,
                 onNavigateToConfirmation = redirect(
                     navController,
-                    cancelCardConfirmationDestination
+                    CancelCardConfirmationDestination
                 ) // You should rather use Session instead of re-passing card argument, but this example focuses on navigation only.
             )
         }
 
-        composable(cancelCardConfirmationDestination, "Card Cancellation Confirmation") { arg ->
+        composable(CancelCardConfirmationDestination, "Card Cancellation Confirmation") { arg ->
             CardCancellationConfirmation(
                 card = arg,
                 onNavigateToNextAfterCardCancelled = onNavigateToNextAfterCardCancelled,
