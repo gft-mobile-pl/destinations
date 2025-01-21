@@ -320,6 +320,11 @@ internal inline fun <reified T : Any?> defineDestinationNavArgument(
             NavType.ParcelableType(T::class.java)
         }
 
+        T::class.java.isEnum -> {
+            @Suppress("UNCHECKED_CAST")
+            NavType.EnumType(T::class.java as Class<Enum<*>>)
+        }
+
         Serializable::class.java.isAssignableFrom(T::class.java) -> {
             @Suppress("UNCHECKED_CAST")
             NavType.SerializableType(T::class.java as Class<Serializable>)
